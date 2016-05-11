@@ -19,8 +19,6 @@ $this->registerJs($js);
 \yii\widgets\Pjax::begin([
     'id'    =>  'rating-grid'
 ]);
-echo \yii\bootstrap\Html::button('Обновить', ['class' => 'btn btn-default', 'id' => 'updateBtn']),
-    \yii\bootstrap\Html::tag('br');
 echo \yii\grid\GridView::widget([
     'dataProvider'  =>  $dataProvider,
     'columns'       =>  [

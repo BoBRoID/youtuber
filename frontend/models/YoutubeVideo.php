@@ -71,7 +71,7 @@ class YoutubeVideo extends Model
         }
 
         foreach($video->find("#eow-title") as $node){
-            $this->name = strip_tags($node);
+            $this->name = htmlspecialchars_decode(strip_tags($node));
         }
 
         foreach($video->find(".watch-time-text") as $node){
