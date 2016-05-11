@@ -122,6 +122,10 @@ class SiteController extends Controller
             }
         }
 
+        if($video->isNewRecord){
+            throw new NotFoundHttpException("Видео не найдено!");
+        }
+
         return $this->render('video', [
             'video' =>  $video
         ]);

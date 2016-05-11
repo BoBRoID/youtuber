@@ -22,7 +22,8 @@ class FindVideoForm extends Model
     public function rules()
     {
         return [
-            [['url'], 'safe']
+            [['url'], 'safe'],
+            [['url'], 'required']
         ];
     }
 
