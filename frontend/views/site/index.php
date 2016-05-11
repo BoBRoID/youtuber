@@ -53,7 +53,7 @@ $this->title = 'My Yii Application';
                         $name = mb_strlen($model->name) > 55 ? mb_substr($model->name, 0, 56).'...' : $model->name;
 
                         if(!empty($model->link_hash)){
-                            return \yii\bootstrap\Html::a($name, '/search-video/'.$model->link_hash);
+                            return \yii\bootstrap\Html::a($name, '/search-video/'.$model->link_hash, ['title' => $model->name]);
                         }
                         return $name;
                     }
