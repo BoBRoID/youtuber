@@ -76,9 +76,7 @@ class YoutubeVideo extends Model
 
         foreach($video->find(".watch-time-text") as $node){
             //$this->publishDate = DateHelper::parseDate(preg_replace('/^\D+\s/', '', strip_tags($node)));
-            $this->publishDate = preg_replace('/^Published on\s+/', '', strip_tags($node));
-            echo strtotime($this->publishDate);
-            die();
+            $this->publishDate = date('Y-m-d', strtotime(preg_replace('/^Published on\s+/', '', strip_tags($node))));
         }
 
         foreach($video->find("#watch-related a") as $node){
