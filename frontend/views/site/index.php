@@ -13,7 +13,7 @@ $this->registerJs($js);
 $this->title = 'My Yii Application';
 ?>
 <div class="site-index">
-    <div class="jumbotron col-xs-12">
+    <div class="jumbotron col-xs-12" style="margin-bottom: 0;">
         <?php
         $model = new \frontend\models\FindVideoForm();
 
@@ -89,4 +89,5 @@ $this->title = 'My Yii Application';
         \yii\widgets\Pjax::end();
         ?>
     </div>
+    <div class="clearfix"></div>
 </div>
