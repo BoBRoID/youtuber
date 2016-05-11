@@ -12,6 +12,7 @@ namespace frontend\models;
 use common\models\Link;
 use common\models\Video;
 use darkdrim\simplehtmldom\SimpleHTMLDom;
+use frontend\helpers\DateHelper;
 use yii\base\ErrorException;
 use yii\base\Exception;
 use yii\base\Model;
@@ -74,7 +75,7 @@ class YoutubeVideo extends Model
         }
 
         foreach($video->find(".watch-time-text") as $node){
-            $this->publishDate = preg_replace('/^\D+\s/', '', strip_tags($node));
+            $this->publishDate = DateHelper::parseDate(preg_replace('/^\D+\s/', '', strip_tags($node)));
         }
 
         foreach($video->find("#watch-related a") as $node){

@@ -78,7 +78,16 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        return $this->render('index', [
+            'lastAddedProvider' =>  new ActiveDataProvider([
+                'query' =>  Video::find()->where('views > 500000'),
+                'sort'  =>  [
+                    'defaultOrder'  =>  [
+                        'checked' =>  SORT_DESC
+                    ]
+                ]
+            ])
+        ]);
     }
 
     public function actionSearchVideo($hash = null){

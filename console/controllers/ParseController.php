@@ -12,6 +12,7 @@ namespace console\controllers;
 use common\models\Link;
 use common\models\Video;
 use common\models\Worker;
+use frontend\helpers\DateHelper;
 use frontend\models\YoutubeVideo;
 use yii\console\Controller;
 use yii\db\Query;
@@ -22,9 +23,13 @@ class ParseController extends Controller
     public function actionIndex(){
         $i = 0;
 
-        $availableGroups = [];
+        $availableGroups = $usedGroups = [];
 
-        foreach(Link::find()->groupBy('group')->all() as $groupID){
+        foreach(Worker::find()->where('groupID != 0')->groupBy('groupID')->all() as $worker){
+            $usedGroups[] = $worker->groupID;
+        }
+
+        foreach(Link::find()->andWhere(['not in', 'group', $usedGroups])->groupBy('group')->all() as $groupID){
             $availableGroups[] = $groupID->group;
         }
 
@@ -36,11 +41,13 @@ class ParseController extends Controller
 
         $worker->save(false);
 
-        $videosCount = Link::find()->where(['group' => $group])->count();
+        $links = Link::find()->where(['group' => $group]);
+
+        $videosCount = $links->count();
 
         echo "   > Total videos: {$videosCount} \r\n";
 
-        foreach(Link::find()->orderBy('added')->each() as $videoLink){
+        foreach($links->orderBy('added')->each() as $videoLink){
             $i++;
             $youtubeVideo = new YoutubeVideo(['link' => $videoLink->link]);
             echo "   > Video {$i} from {$videosCount}... ";
@@ -65,6 +72,29 @@ class ParseController extends Controller
         }
 
         $worker->delete();
+    }
+
+    public function actionReparseDates(){
+        $videosCount = Video::find()->count();
+        $i = 0;
+
+        foreach(Video::find()->each() as $video){
+            $i++;
+
+            echo "Video {$i} from {$videosCount}...";
+
+            if(!strtotime($video->uploaded)){
+                $video->uploaded = DateHelper::parseDate($video->uploaded);
+            }
+
+            if($video->save()){
+                echo " saved!";
+            }else{
+                echo " not saved!";
+            }
+
+            echo "\r\n";
+        }
     }
 
     public function actionGroupLinks(){

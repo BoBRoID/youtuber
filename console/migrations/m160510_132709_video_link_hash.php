@@ -6,7 +6,8 @@ class m160510_132709_video_link_hash extends Migration
 {
     public function up()
     {
-        $this->addColumn(\common\models\Video::tableName(), 'link_hash', \yii\db\Schema::TYPE_STRING);
+        $this->addColumn(\common\models\Video::tableName(), 'link_hash', \yii\db\Schema::TYPE_STRING.'(32)');
+        $this->createIndex('link_hash', \common\models\Video::tableName(), 'link_hash', true);
     }
 
     public function down()
