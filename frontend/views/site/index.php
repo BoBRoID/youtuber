@@ -80,8 +80,7 @@ $this->title = 'My Yii Application';
                 [
                     'attribute' =>  'checked',
                     'value'     =>  function($model){
-                        return $model->checked;
-                        return \Yii::$app->formatter->asRelativeTime(strtotime($model->checked) - 7200);
+                        return \Yii::$app->formatter->asRelativeTime(strtotime($model->checked) - (60 * 60 * 3));
                     }
                 ]
             ]
