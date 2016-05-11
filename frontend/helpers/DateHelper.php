@@ -16,7 +16,7 @@ class DateHelper
      * @param $string
      * @return string
      */
-    public static function parseDate($string){
+    public static function parseUkrainianDate($string){
         $uk_month = ['січ', 'лют', 'бер', 'квіт', 'трав', 'черв', 'лип', 'серп', 'вер', 'жовт', 'лист', 'груд'];
         $en_month = ['Jan', 'Feb', 'Mar', 'May', 'Apr', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
@@ -32,6 +32,12 @@ class DateHelper
             var_dump($date);
             die();
         }
+
+        return $date['year'].'-'.(strlen($date['month']) >= 2 ? $date['month'] : "0".$date['month']).'-'.(strlen($date['day']) >= 2 ? $date['day'] : "0".$date['day']);
+    }
+
+    public static function parseEnglishDate($string){
+        $date = date_parse_from_format("M, j Y", $string);
 
         return $date['year'].'-'.(strlen($date['month']) >= 2 ? $date['month'] : "0".$date['month']).'-'.(strlen($date['day']) >= 2 ? $date['day'] : "0".$date['day']);
     }
