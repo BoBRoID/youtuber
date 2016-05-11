@@ -36,4 +36,11 @@ class FindVideoForm extends Model
         return $this->_url;
     }
 
+    public function attributeLabels()
+    {
+        return [
+            'url'   =>  'Адрес видео: '
+        ];
+    }
+
 }

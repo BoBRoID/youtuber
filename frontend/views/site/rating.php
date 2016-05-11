@@ -16,6 +16,13 @@ JS;
 
 $this->registerJs($js);
 
+$this->title = 'Таблица рейтинга';
+
+echo \yii\bootstrap\Html::tag('blockquote',
+    \yii\bootstrap\Html::tag('h1', $this->title).
+    \yii\bootstrap\Html::tag('p', 'Здесь собраны в виде таблицы все видео прошедшие через наш сервис')
+);
+
 \yii\widgets\Pjax::begin([
     'id'    =>  'rating-grid'
 ]);

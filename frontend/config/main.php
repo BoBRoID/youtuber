@@ -33,6 +33,7 @@ return [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                '/'                     =>  'site/index',
                 '/<action>'             =>  'site/<action>',
                 '/search-video/<hash>'  =>  'site/search-video'
             ],
