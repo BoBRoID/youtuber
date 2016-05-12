@@ -131,6 +131,16 @@ class SiteController extends Controller
         ]);
     }
 
+    public function actionSearch(){
+        if(!\Yii::$app->request->isAjax){
+            throw new BadRequestHttpException("Этот метод доступен только через ajax!");
+        }
+
+        \Yii::$app->response->format = 'json';
+
+        return Video::find()->where(['like', 'name', \Yii::$app->request->get("string")])->limit(10)->all();
+    }
+
     public function actionRating(){
         return $this->render('rating', [
             'dataProvider'  =>  new ActiveDataProvider([
