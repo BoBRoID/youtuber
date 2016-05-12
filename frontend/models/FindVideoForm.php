@@ -30,7 +30,7 @@ class FindVideoForm extends Model
     public $_url;
 
     public function setUrl($url){
-        $this->_url = preg_replace('/&amp;(.*)/', '', $url);
+        $this->_url = preg_replace('/(&amp;(.*)|\&(.*))/', '', $url);
     }
 
     public function getUrl(){
