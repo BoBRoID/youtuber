@@ -29,7 +29,7 @@ class ParseController extends Controller
             $usedGroups[] = $worker->groupID;
         }
 
-        foreach(Link::find()->andWhere(['not in', 'group', $usedGroups])->groupBy('group')->all() as $groupID){
+        foreach(Link::find()->andWhere(['not in', 'group', $usedGroups])->andWhere('COUNT(`links`) != 0')->groupBy('group')->all() as $groupID){
             $availableGroups[] = $groupID->group;
         }
 
