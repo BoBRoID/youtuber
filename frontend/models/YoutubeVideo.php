@@ -45,6 +45,15 @@ class YoutubeVideo extends Model
 
     public $author = 0;
 
+    public function rules(){
+        return [
+            [['views', 'likes', 'dislikes'], 'integer'],
+            //[['views', 'likes', 'dislikes'], 'default' => 0],
+            [['link', 'name', 'publishDate'], 'string'],
+            [['views', 'likes', 'dislikes', 'link', 'publishDate', 'name'], 'safe']
+        ];
+    }
+
     public function parse(){
         $video = null;
 
@@ -101,7 +110,7 @@ class YoutubeVideo extends Model
             'likes'         =>  $video->likes,
             'dislikes'      =>  $video->dislikes,
             'publishDate'   =>  $video->uploaded,
-        ], false);
+        ]);
     }
 
     public function save($consoleMode = false){
