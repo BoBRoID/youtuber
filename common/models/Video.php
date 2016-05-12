@@ -18,6 +18,9 @@ use Yii;
  */
 class Video extends \yii\db\ActiveRecord
 {
+    protected $_next;
+    protected $_previous;
+
     /**
      * @inheritdoc
      */
@@ -35,7 +38,23 @@ class Video extends \yii\db\ActiveRecord
 
         return $return;
     }
-    
+
+    public function getNext(){
+        if(empty($this->_next)){
+            $this->_next = self::find()->where('views <= '.$this->views)->andWhere("`link_hash` != '{$this->link_hash}'")->orderBy('views DESC')->limit(1)->one();
+        }
+
+        return $this->_next;
+    }
+
+    public function getPrevious(){
+        if(empty($this->_previous)){
+            $this->_previous = self::find()->where('views >= '.$this->views)->andWhere("`link_hash` != '{$this->link_hash}'")->orderBy('views ASC')->limit(1)->one();
+        }
+
+        return $this->_previous;
+    }
+
     /**
      * @inheritdoc
      */
