@@ -53,7 +53,9 @@ $this->title = $video->name.' - Youtuber';
     </div>
     <div class="col-xs-6">
         <div class="likes-dislikes">
+            <?php if(strtotime($video->uploaded)){ ?>
             <span><?=FA::i('upload', ['title' => 'Загружено'])->size(FA::SIZE_2X)?>&nbsp;Загружено:&nbsp;<?=\Yii::$app->formatter->asDate($video->uploaded, 'php:d.m.Y')?>&nbsp;</span>
+            <?php } ?>
             <span><?=FA::i('eye', ['title' => 'Просмотров'])->size(FA::SIZE_2X)?>&nbsp;Просмотров:&nbsp;<?=number_format($video->views, 0, '.', ' ')?>&nbsp;</span>
             <span><?=FA::i('thumbs-o-up', ['title' => 'Лайков'])->size(FA::SIZE_2X)?>&nbsp;Понравилось:&nbsp;<?=number_format($video->likes, 0, '.', ' ')?>&nbsp;</span>
             <span><?=FA::i('thumbs-o-down', ['title' => 'Дизлайков'])->size(FA::SIZE_2X)?>&nbsp;Не понравилось:&nbsp;<?=number_format($video->dislikes, 0, '.', ' ')?>&nbsp;</span>
