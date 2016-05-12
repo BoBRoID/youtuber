@@ -28,6 +28,20 @@ $this->registerMetaTag(['name' => 'msapplication-TileColor', 'content'  =>  '#0c
 $this->registerMetaTag(['name' => 'msapplication-TileImage', 'content'  =>  '/ms-icon-144x144.png']);
 $this->registerMetaTag(['name' => 'theme-color', 'content'  =>  '#0c84e4']);
 
+$this->registerMetaTag(['name' => 'keywords', 'content' => 'Youtuber, видео с youtube, видео, статистика youtube, топ видео youtube, топ youtube, топ ютуб, видео с ютуба, статистика ютуба']);
+
+$analyticsJs = <<<'JS'
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-77677693-1', 'auto');
+ga('send', 'pageview');
+JS;
+
+$this->registerJs($analyticsJs);
+
 AppAsset::register($this);
 ?>
 <?php $this->beginPage() ?>
@@ -115,17 +129,6 @@ AppAsset::register($this);
         <p class="pull-right"><?= Yii::powered() ?></p>
     </div>
 </footer>
-
-<script>
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-    ga('create', 'UA-77677693-1', 'auto');
-    ga('send', 'pageview');
-</script>
-
 <?php $this->endBody() ?>
 </body>
 </html>
