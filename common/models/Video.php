@@ -16,6 +16,8 @@ use Yii;
  * @property string $uploaded
  * @property string $checked
  * @property string $link_hash
+ * @property string $thumbnail
+ * @property date $added
  */
 class Video extends \yii\db\ActiveRecord
 {
@@ -64,7 +66,9 @@ class Video extends \yii\db\ActiveRecord
         return [
             [['views', 'likes', 'dislikes'], 'integer'],
             [['checked'], 'safe'],
-            [['link', 'name', 'uploaded', 'link_hash'], 'string', 'max' => 255],
+            [['added', 'uploaded'], 'date', 'format'    =>  'php:Y-m-d'],
+            [['link', 'name', 'link_hash', 'thumbnail'], 'string', 'max' => 255],
+            [['link', 'name', 'views', 'likes', 'dislikes', 'uploaded', 'checked', 'thumbnail', 'added'], 'safe']
         ];
     }
 
@@ -81,13 +85,20 @@ class Video extends \yii\db\ActiveRecord
             'dislikes'      => 'Дизлайков',
             'uploaded'      => 'Загружено на youtube',
             'checked'       => 'Обновлено',
+            'thumbnail'     => 'Изображение',
+            'added'         => 'Добавлено в базу',
         ];
     }
 
     public function beforeSave($insert)
     {
+
         if($this->isNewRecord || empty($this->link_hash)){
             $this->link_hash = md5($this->link);
+        }
+
+        if($this->isNewRecord){
+            $this->added = date('Y-m-d H:i:s');
         }
 
         if(empty($this->views)){

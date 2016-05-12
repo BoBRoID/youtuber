@@ -12,9 +12,7 @@ namespace frontend\models;
 use common\models\Link;
 use common\models\Video;
 use darkdrim\simplehtmldom\SimpleHTMLDom;
-use frontend\helpers\DateHelper;
 use yii\base\ErrorException;
-use yii\base\Exception;
 use yii\base\Model;
 use yii\db\IntegrityException;
 
@@ -45,12 +43,14 @@ class YoutubeVideo extends Model
 
     public $author = 0;
 
+    public $thumbnail = '';
+
     public function rules(){
         return [
             [['views', 'likes', 'dislikes'], 'integer'],
             //[['views', 'likes', 'dislikes'], 'default' => 0],
-            [['link', 'name', 'publishDate'], 'string'],
-            [['views', 'likes', 'dislikes', 'link', 'publishDate', 'name'], 'safe']
+            [['link', 'name', 'publishDate', 'thumbnail'], 'string'],
+            [['views', 'likes', 'dislikes', 'link', 'publishDate', 'name', 'thumbnail'], 'safe']
         ];
     }
 
@@ -83,9 +83,8 @@ class YoutubeVideo extends Model
             $this->name = htmlspecialchars_decode(strip_tags($node));
         }
 
-        foreach($video->find(".watch-time-text") as $node){
-            $this->publishDate = DateHelper::parseEnglishDate(preg_replace('/^Published on\s+/', '', strip_tags($node)));
-            //$this->publishDate = date('Y-m-d', strtotime(preg_replace('/^Published on\s+/', '', strip_tags($node))));
+        foreach($video->find("[itemprop=datePublished]") as $node){
+            $this->publishDate = \Yii::$app->formatter->asDate($node->attr['content'], 'php:Y-m-d');
         }
 
         foreach($video->find("#watch-related a") as $node){
@@ -94,6 +93,10 @@ class YoutubeVideo extends Model
 
         foreach($video->find(".related-list-item a") as $node){
             $this->relatedLinks[] = 'https://youtube.com'.preg_replace('/&amp;(.*)/', '', $node->attr['href']);
+        }
+
+        foreach($video->find("[itemprop=thumbnail] link[itemprop=url]") as $node){
+            $this->thumbnail = $node->attr['href'];
         }
 
         return true;
@@ -110,6 +113,7 @@ class YoutubeVideo extends Model
             'likes'         =>  $video->likes,
             'dislikes'      =>  $video->dislikes,
             'publishDate'   =>  $video->uploaded,
+            'thumbnail'     =>  $video->thumbnail
         ]);
     }
 
@@ -141,10 +145,13 @@ class YoutubeVideo extends Model
             'likes'     =>  $this->likes,
             'dislikes'  =>  $this->dislikes,
             'uploaded'  =>  $this->publishDate,
+            'thumbnail' =>  $this->thumbnail
         ]);
 
         try{
-            $videoModel->save();
+            if(!$videoModel->save()){
+                var_dump($videoModel->getErrors());
+            }
         }catch (IntegrityException $e){
             var_dump($e);
 
@@ -157,6 +164,7 @@ class YoutubeVideo extends Model
                     'likes'     =>  $this->likes,
                     'dislikes'  =>  $this->dislikes,
                     'uploaded'  =>  $this->publishDate,
+                    'thumbnail' =>  $this->thumbnail
                 ]);
             }elseif($consoleMode){
                 return false;
