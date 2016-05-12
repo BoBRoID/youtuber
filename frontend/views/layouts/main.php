@@ -30,6 +30,8 @@ $this->registerMetaTag(['name' => 'theme-color', 'content'  =>  '#0c84e4']);
 
 $this->registerMetaTag(['name' => 'keywords', 'content' => 'Youtuber, видео с youtube, видео, статистика youtube, топ видео youtube, топ youtube, топ ютуб, видео с ютуба, статистика ютуба']);
 
+\rmrevin\yii\fontawesome\cdn\AssetBundle::register($this);
+
 $analyticsJs = <<<'JS'
 (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
         (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -37,8 +39,34 @@ $analyticsJs = <<<'JS'
 })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
 
 ga('create', 'UA-77677693-1', 'auto');
+ga('require', 'linkid');
 ga('send', 'pageview');
 JS;
+
+$css = <<<'CSS'
+.twitter-typeahead{
+    width: 300px;
+}
+
+.tt-input.loading {
+    background: transparent url('../img/loading.gif') no-repeat scroll right center content-box !important;
+}
+
+.tt-input{
+    width: 100% !important;
+}
+
+.tt-menu, .tt-dataset{
+    width: 500px;
+}
+
+.tt-dataset a{
+    //width: 480px;
+    overflow: hidden;
+}
+CSS;
+
+$this->registerCss($css);
 
 $this->registerJs($analyticsJs);
 
@@ -94,13 +122,15 @@ AppAsset::register($this);
             'dataset'   =>  [
                 [
                     'remote'    =>  [
+                        'rateLimitBy'   =>  'throttle',
                         'url'       =>  '/search?string=QUERY',
                         'wildcard'  =>  'QUERY'
                     ],
+                    'display'   =>  'name',
                     'limit'     => 10,
                     'templates' => [
                         'empty' => Html::tag('div', 'Ничего не найдено', ['class' => 'text-error']),
-                        'suggestion' => new JsExpression("Handlebars.compile('{$typeaheadTemplate}')")
+                        'suggestion' => new JsExpression("Handlebars.compile('{$typeaheadTemplate}')"),
                     ]
                 ]
             ]

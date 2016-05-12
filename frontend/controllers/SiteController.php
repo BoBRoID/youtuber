@@ -136,9 +136,19 @@ class SiteController extends Controller
             throw new BadRequestHttpException("Этот метод доступен только через ajax!");
         }
 
+        $results = [];
+
         \Yii::$app->response->format = 'json';
 
-        return Video::find()->where(['like', 'name', \Yii::$app->request->get("string")])->limit(10)->all();
+        foreach(Video::find()->where(['like', 'name', \Yii::$app->request->get("string")])->limit(10)->all() as $video){
+            $video->name = trim($video->name);
+            $results[] = [
+                'name'      =>  mb_strlen($video->name) > 60 ? mb_substr($video->name, 0, 60).'...' : $video->name,
+                'link_hash' =>  $video->link_hash
+            ];
+        }
+
+        return $results;
     }
 
     public function actionRating(){
