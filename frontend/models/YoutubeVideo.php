@@ -49,7 +49,7 @@ class YoutubeVideo extends Model
         $video = null;
 
         try{
-            $video = SimpleHTMLDom::file_get_html($this->link);
+            $video = SimpleHTMLDom::file_curl_get_html($this->link);
         }catch (ErrorException $e){
             return false;
         }
