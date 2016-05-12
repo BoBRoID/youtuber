@@ -24,7 +24,10 @@ echo \yii\bootstrap\Html::tag('blockquote',
 );
 
 \yii\widgets\Pjax::begin([
-    'id'    =>  'rating-grid'
+    'id'    =>  'rating-grid',
+    'clientOptions' =>  [
+        'timeout'       =>  '1500'
+    ]
 ]);
 echo \yii\grid\GridView::widget([
     'dataProvider'  =>  $dataProvider,

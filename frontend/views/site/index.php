@@ -44,7 +44,10 @@ $this->title = 'Youtuber - статистика роликов с youtube';
     <div class="" style="margin-top: 20px;">
         <?php
         \yii\widgets\Pjax::begin([
-            'id' => 'last-added'
+            'id'            => 'last-added',
+            'clientOptions' =>  [
+                'timeout'       =>  '1500'
+            ]
         ]);
 
         echo \yii\bootstrap\Html::tag('h4', "Уже ".\common\models\Video::find()->count()." видео на сайте!", ['style' => 'text-align: center; vertical-align: middle; line-height: 50px;']);
