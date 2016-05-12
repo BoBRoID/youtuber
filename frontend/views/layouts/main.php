@@ -119,6 +119,9 @@ AppAsset::register($this);
         'options'   =>  ['class' => 'navbar-form navbar-left', 'role'   =>  'search'],
         'items'     =>  [\kartik\typeahead\Typeahead::widget([
             'name'      =>  'search',
+            'options'   =>  [
+                'placeholder'   =>  'поиск по видео...'
+            ],
             'dataset'   =>  [
                 [
                     'remote'    =>  [
