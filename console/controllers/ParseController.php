@@ -12,10 +12,12 @@ namespace console\controllers;
 use common\models\Link;
 use common\models\Video;
 use common\models\Worker;
+use frontend\components\YoutubeAPI;
 use frontend\helpers\DateHelper;
 use frontend\models\YoutubeVideo;
 use yii\console\Controller;
 use yii\db\Query;
+use yii\web\NotFoundHttpException;
 
 class ParseController extends Controller
 {
@@ -72,6 +74,40 @@ class ParseController extends Controller
         }
 
         $worker->delete();
+    }
+
+    public function actionParseYoutubeKeys(){
+        $videosCount = Video::find()->where('youtubeID = \'\' OR youtubeID is NULL')->orderBy('checked')->count();
+        $i = 0;
+
+        foreach(Video::find()->where('youtubeID = \'\' OR youtubeID is NULL')->orderBy('checked')->each() as $video){
+            $i++;
+            echo "   > Video {$i} from {$videosCount}... ";
+            $video->youtubeID = $video->getYoutubeID();
+
+            if($video->save(false)){
+                echo "Parsed!";
+            }else{
+                echo "Not parsed! Suggestion: ";
+                var_dump($video->getErrors());
+            }
+
+            echo "\r\n";
+        }
+    }
+
+    public function actionApiReparser(){
+        $api = new YoutubeAPI();
+
+        foreach(Video::find()->orderBy('checked')->each() as $video){
+            try{
+                $video->applyApiData($api->getVideos($video->youtubeID));
+
+                $video->save(false);
+            }catch (NotFoundHttpException $e){
+                $video->delete();
+            }
+        }
     }
 
     public function actionReparseDates(){

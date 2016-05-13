@@ -38,7 +38,7 @@ $this->title = $video->name.' - Youtuber';
             ]
         )?>
         <div class="col-lg-10 col-md-10 col-xs-12">
-            <iframe width="100%" height="520" src="https://www.youtube.com/embed/<?=preg_replace('/(.*)\?v=/', '', $video->link)?>" frameborder="0" allowfullscreen></iframe>
+            <iframe width="100%" height="520" src="https://www.youtube.com/embed/<?=$video->youtubeID?>" frameborder="0" allowfullscreen></iframe>
         </div>
         <?=\yii\bootstrap\Html::a(
             FA::i('arrow-right', ['style' => 'line-height: 530px; text-align: left; width: 100%'])->size(FA::SIZE_4X),

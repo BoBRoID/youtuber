@@ -16,8 +16,8 @@ use Yii;
  * @property string $uploaded
  * @property string $checked
  * @property string $link_hash
- * @property string $thumbnail
- * @property date $added
+ * @property string $added
+ * @property integer $id
  */
 class Video extends \yii\db\ActiveRecord
 {
@@ -30,6 +30,66 @@ class Video extends \yii\db\ActiveRecord
     public static function tableName()
     {
         return 'videos';
+    }
+    
+    public function getYoutubeID(){
+        return preg_replace('/(.*)\?v=/', '', $this->link);
+    }
+
+    /**
+     * @param array $data
+     */
+    public function applyApiData($data){
+        $this->setAttributes([
+            'uploaded'      =>  \Yii::$app->formatter->asDate($data['snippet']['publishedAt'], 'php:Y-m-d'),
+            'channelID'     =>  $data['snippet']['channelId'],
+            'name'          =>  $data['snippet']['title'],
+            'categoryID'    =>  $data['snippet']['categoryId'],
+            'liveBroadcast' =>  ($data['snippet']['liveBroadcastContent'] != 'none') ? 1 : 0,
+        ]);
+
+        if(isset($data['statistics'])){
+            if(isset($data['statistics']['viewCount'])){
+                $this->views = $data['statistics']['viewCount'];
+            }
+
+            if(isset($data['statistics']['likeCount'])){
+                $this->likes = $data['statistics']['likeCount'];
+            }
+
+            if(isset($data['statistics']['dislikeCount'])){
+                $this->dislikes = $data['statistics']['dislikeCount'];
+            }
+        }
+
+        if(isset($data['snippet']['thumbnails'])){
+            foreach($data['snippet']['thumbnails'] as $size => $thumbnail){
+                $thumbnailModel = new Thumbnail(['videoID' => $this->id]);
+
+                switch($size){
+                    case 'default':
+                        $thumbnailModel->size = Thumbnail::SIZE_PREVIEW;
+                        break;
+                    case 'medium':
+                        $thumbnailModel->size = Thumbnail::SIZE_SMALL;
+                        break;
+                    case 'high':
+                        $thumbnailModel->size = Thumbnail::SIZE_MEDIUM;
+                        break;
+                    case 'standard':
+                        $thumbnailModel->size = Thumbnail::SIZE_LARGE;
+                        break;
+                    default:
+                    case 'maxres':
+                        $thumbnailModel->size = Thumbnail::SIZE_FULL;
+                        break;
+                }
+
+                $thumbnailModel->link = $thumbnail['url'];
+
+                $thumbnailModel->save(false);
+            }
+        }
     }
 
     public static function findByLinkHash($link_hash, $result = true){
@@ -64,11 +124,13 @@ class Video extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['views', 'likes', 'dislikes'], 'integer'],
+            [['views', 'likes', 'dislikes', 'categoryID'], 'integer'],
             [['checked'], 'safe'],
             [['added', 'uploaded'], 'date', 'format'    =>  'php:Y-m-d'],
-            [['link', 'name', 'link_hash', 'thumbnail'], 'string', 'max' => 255],
-            [['link', 'name', 'views', 'likes', 'dislikes', 'uploaded', 'checked', 'thumbnail', 'added'], 'safe']
+            [['link', 'name', 'link_hash', 'channelID'], 'string', 'max' => 255],
+            [['link', 'name'], 'trim'],
+            [['liveBroadcast'], 'boolean'],
+            [['link', 'name', 'views', 'likes', 'dislikes', 'uploaded', 'checked', 'added', 'channelID', 'categoryID'], 'safe']
         ];
     }
 
@@ -85,8 +147,10 @@ class Video extends \yii\db\ActiveRecord
             'dislikes'      => 'Дизлайков',
             'uploaded'      => 'Загружено на youtube',
             'checked'       => 'Обновлено',
-            'thumbnail'     => 'Изображение',
             'added'         => 'Добавлено в базу',
+            'channelID'     =>  '',
+            'categoryID'    =>  '',
+            'liveBroadcast' =>  ''
         ];
     }
 
@@ -98,7 +162,7 @@ class Video extends \yii\db\ActiveRecord
         }
 
         if($this->isNewRecord){
-            $this->added = date('Y-m-d H:i:s');
+            $this->added = date('Y-m-d');
         }
 
         if(empty($this->views)){

@@ -43,13 +43,11 @@ class YoutubeVideo extends Model
 
     public $author = 0;
 
-    public $thumbnail = '';
-
     public function rules(){
         return [
             [['views', 'likes', 'dislikes'], 'integer'],
             //[['views', 'likes', 'dislikes'], 'default' => 0],
-            [['link', 'name', 'publishDate', 'thumbnail'], 'string'],
+            [['link', 'name', 'publishDate'], 'string'],
             [['views', 'likes', 'dislikes', 'link', 'publishDate', 'name', 'thumbnail'], 'safe']
         ];
     }
@@ -95,11 +93,15 @@ class YoutubeVideo extends Model
             $this->relatedLinks[] = 'https://youtube.com'.preg_replace('/&amp;(.*)/', '', $node->attr['href']);
         }
 
-        foreach($video->find("[itemprop=thumbnail] link[itemprop=url]") as $node){
+        /*foreach($video->find("[itemprop=thumbnail] link[itemprop=url]") as $node){
             $this->thumbnail = $node->attr['href'];
-        }
+        }*/
 
         return true;
+    }
+    
+    public function parseAPI(){
+        
     }
 
     /**
@@ -113,7 +115,6 @@ class YoutubeVideo extends Model
             'likes'         =>  $video->likes,
             'dislikes'      =>  $video->dislikes,
             'publishDate'   =>  $video->uploaded,
-            'thumbnail'     =>  $video->thumbnail
         ]);
     }
 
@@ -145,7 +146,6 @@ class YoutubeVideo extends Model
             'likes'     =>  $this->likes,
             'dislikes'  =>  $this->dislikes,
             'uploaded'  =>  $this->publishDate,
-            'thumbnail' =>  $this->thumbnail
         ]);
 
         try{
@@ -164,7 +164,6 @@ class YoutubeVideo extends Model
                     'likes'     =>  $this->likes,
                     'dislikes'  =>  $this->dislikes,
                     'uploaded'  =>  $this->publishDate,
-                    'thumbnail' =>  $this->thumbnail
                 ]);
             }elseif($consoleMode){
                 return false;
