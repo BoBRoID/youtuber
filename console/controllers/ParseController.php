@@ -99,7 +99,7 @@ class ParseController extends Controller
     public function actionApiReparser(){
         $api = new YoutubeAPI();
 
-        foreach(Video::find()->orderBy('checked')->each() as $video){
+        foreach(Video::find()->orderBy('checked')->each(10) as $video){
             try{
                 $video->applyApiData($api->getVideos($video->youtubeID));
 
