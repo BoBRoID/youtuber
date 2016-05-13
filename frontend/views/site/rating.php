@@ -66,7 +66,7 @@ echo \yii\grid\GridView::widget([
             'attribute' =>  'checked',
             'value'     =>  function($model){
                 //return $model->checked;
-                return \Yii::$app->formatter->asRelativeTime(strtotime($model->checked) - (60 * 60 * 3));
+                return \Yii::$app->formatter->asRelativeTime($model->checked);
             }
         ]
     ]
