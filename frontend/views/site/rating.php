@@ -11,7 +11,7 @@ $("body").on("click", '#updateBtn', function(){
     $.pjax.reload({container: '#rating-grid'});
 });
 
-setInterval(function(){$.pjax.reload({container: '#rating-grid'});}, 1500);
+setInterval(function(){$.pjax.reload({container: '#rating-grid', timeout: '5000'});}, 1500);
 JS;
 
 $this->registerJs($js);
