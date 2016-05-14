@@ -244,9 +244,11 @@ class ParseController extends Controller
                     if ($e->getCode() == 23000) {
                         $video = Video::findOne(['youtubeID' => $link->youtubeID]);
 
-                        $video->applyApiData($apiData);
+                        if($video){
+                            $video->applyApiData($apiData);
 
-                        $video->save(false);
+                            $video->save(false);
+                        }
                     }
                 }
 
