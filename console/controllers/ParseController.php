@@ -98,7 +98,7 @@ class ParseController extends Controller
     }
 
     public function actionParseLinksYoutubeKeys(){
-        $videosCount = Link::find()->where('youtubeID = \'\' OR youtubeID is NULL')->orderBy('checked')->count();
+        $videosCount = Link::find()->where('youtubeID = \'\' OR youtubeID is NULL')->count();
         $i = 0;
 
         foreach(Link::find()->where('youtubeID = \'\' OR youtubeID is NULL')->orderBy('added')->each() as $video){
