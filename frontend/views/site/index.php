@@ -4,7 +4,7 @@
 
 
 $js = <<<'JS'
-setInterval(function(){$.pjax.reload({container: '#last-added'});}, 1500);
+setInterval(function(){$.pjax.reload({container: '#last-added', timeout: '5000'});}, 1500);
 JS;
 
 $this->registerJs($js);
@@ -45,7 +45,7 @@ $this->title = 'Youtuber - статистика роликов с youtube';
         <?php
         \yii\widgets\Pjax::begin([
             'id'            =>  'last-added',
-            'timeout'       =>  5000
+            'timeout'       =>  10000
         ]);
 
         echo \yii\bootstrap\Html::tag('h4', "Уже ".\common\models\Video::find()->count()." видео на сайте!", ['style' => 'text-align: center; vertical-align: middle; line-height: 50px;']);
@@ -99,7 +99,7 @@ $this->title = 'Youtuber - статистика роликов с youtube';
                 [
                     'attribute' =>  'checked',
                     'value'     =>  function($model){
-                        return \Yii::$app->formatter->asRelativeTime(strtotime($model->checked) - (60 * 60 * 3));
+                        return \Yii::$app->formatter->asRelativeTime(strtotime($model->checked));
                     }
                 ]
             ]
