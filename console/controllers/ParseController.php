@@ -98,30 +98,38 @@ class ParseController extends Controller
     }
 
     public function actionParseLinksYoutubeKeys($debug = false){
-        if($debug){
-            $videosCount = Link::find()->where('youtubeID = \'\' OR youtubeID is NULL')->count();
-            $i = 0;
-        }
+        $videosCount = Link::find()->where('youtubeID = \'\' OR youtubeID is NULL')->count();
+        $i = 0;
 
         echo "   > Total links: {$videosCount}";
 
-        foreach(Link::find()->where('youtubeID = \'\' OR youtubeID is NULL')->each() as $video){
-            if($debug){
-                $i++;
-                echo "   > Video {$i} from {$videosCount}... ";
+        while($i != $videosCount){
+            foreach(Link::find()->where('youtubeID = \'\' OR youtubeID is NULL')->each() as $video){
+                if($debug){
+                    $i++;
+                    echo "   > Video {$i} from {$videosCount}... ";
+                }
+
+                $video->youtubeID = $video->getYoutubeID();
+
+                if($video->save(false) && $debug){
+                    echo "Parsed!";
+                }elseif($debug){
+                    echo "Not parsed! Suggestion: ";
+                    var_dump($video->getErrors());
+                }
+
+                if($debug){
+                    echo "\r\n";
+                }
+
+                if($i == $videosCount){
+                    break;
+                }
             }
 
-            $video->youtubeID = $video->getYoutubeID();
-
-            if($video->save(false) && $debug){
-                echo "Parsed!";
-            }elseif($debug){
-                echo "Not parsed! Suggestion: ";
-                var_dump($video->getErrors());
-            }
-
-            if($debug){
-                echo "\r\n";
+            if($i == $videosCount){
+                break;
             }
         }
     }
