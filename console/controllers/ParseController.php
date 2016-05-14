@@ -139,13 +139,13 @@ class ParseController extends Controller
 
         $availableGroups = $usedGroups = [];
 
-        /*foreach(Worker::find()->distinct('groupID')->where('groupID != 0')->all() as $worker){
-            $usedGroups[] = $worker->groupID;
+        foreach(Worker::find()->distinct('groupID')->where('groupID != 0')->all() as $worker){
+              $usedGroups[] = $worker->groupID;
         }
 
         foreach(Link::find()->andWhere(['not in', 'group', $usedGroups])->groupBy('group')->having('COUNT(`link`) > 0')->all() as $groupID){
             $availableGroups[] = $groupID->group;
-        }*/
+        }
 
         $group = array_rand($availableGroups);
 
