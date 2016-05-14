@@ -101,7 +101,7 @@ class ParseController extends Controller
         $videosCount = Link::find()->where('youtubeID = \'\' OR youtubeID is NULL')->orderBy('checked')->count();
         $i = 0;
 
-        foreach(Link::find()->where('youtubeID = \'\' OR youtubeID is NULL')->orderBy('checked')->each() as $video){
+        foreach(Link::find()->where('youtubeID = \'\' OR youtubeID is NULL')->orderBy('added')->each() as $video){
             $i++;
             echo "   > Video {$i} from {$videosCount}... ";
             $video->youtubeID = $video->getYoutubeID();
