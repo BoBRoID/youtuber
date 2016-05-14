@@ -103,7 +103,7 @@ class ParseController extends Controller
             $i = 0;
         }
 
-        foreach(Link::find()->where('youtubeID = \'\' OR youtubeID is NULL')->orderBy('added')->limit(100000)->each() as $video){
+        foreach(Link::find()->where('youtubeID = \'\' OR youtubeID is NULL')->orderBy('added')->each() as $video){
             if($debug){
                 $i++;
                 echo "   > Video {$i} from {$videosCount}... ";
