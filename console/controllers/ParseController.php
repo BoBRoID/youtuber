@@ -103,23 +103,27 @@ class ParseController extends Controller
             $i = 0;
         }
 
-        foreach(Link::find()->where('youtubeID = \'\' OR youtubeID is NULL')->orderBy('added')->each() as $video){
-            if($debug){
-                $i++;
-                echo "   > Video {$i} from {$videosCount}... ";
-            }
+        echo "   > Total links: {$videosCount}";
 
-            $video->youtubeID = $video->getYoutubeID();
+        for($group = 0; $group < $videosCount / 10000; $group++){
+            foreach(Link::find()->where('youtubeID = \'\' OR youtubeID is NULL')->orderBy('added')->limit(10000)->each() as $video){
+                if($debug){
+                    $i++;
+                    echo "   > Video {$i} from {$videosCount}... ";
+                }
 
-            if($video->save(false) && $debug){
-                echo "Parsed!";
-            }elseif($debug){
-                echo "Not parsed! Suggestion: ";
-                var_dump($video->getErrors());
-            }
+                $video->youtubeID = $video->getYoutubeID();
 
-            if($debug){
-                echo "\r\n";
+                if($video->save(false) && $debug){
+                    echo "Parsed!";
+                }elseif($debug){
+                    echo "Not parsed! Suggestion: ";
+                    var_dump($video->getErrors());
+                }
+
+                if($debug){
+                    echo "\r\n";
+                }
             }
         }
     }
