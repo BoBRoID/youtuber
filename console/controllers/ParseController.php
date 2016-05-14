@@ -155,11 +155,11 @@ class ParseController extends Controller
 
         $group = array_rand($availableGroups);
 
-        $worker = new Worker([
-            'groupID' =>  $group
-        ]);
+        //$worker = new Worker([
+        //    'groupID' =>  $group
+        //]);
 
-        $worker->save(false);
+        ///$worker->save(false);
 
         echo "   > getting links count...\r\n";
 
@@ -207,14 +207,44 @@ class ParseController extends Controller
                 }
             }
 
-            $videoLink->delete();
+            //$videoLink->delete();
 
             echo "Links added: {$addedVideos}. Time spent: ".$parseTime." sec.\r\n";
         }
 
         echo "   > end working: ".date('H:i:s');
 
-        $worker->delete();
+        //$worker->delete();
+    }
+
+    public function actionApiYoutubeParser(){
+        $api = new YoutubeAPI();
+
+        foreach(Link::find()->where('`youtubeID` != \'\'')->orderBy('added')->each() as $link){
+
+            $video = new Video([
+                'youtubeID' =>  $link->youtubeID,
+                'link'      =>  $link->link
+            ]);
+
+            $apiData = $api->getVideos($link->youtubeID);
+
+            try{
+                $video->applyApiData($apiData);
+
+                $video->save(false);
+            }catch (NotFoundHttpException $e){
+                $video->delete();
+            }catch (IntegrityException $e){
+                if($e->getCode() == 23000){
+                    $video = Video::findOne(['youtubeID' => $link->youtubeID]);
+
+                    $video->applyApiData($apiData);
+
+                    $video->save(false);
+                }
+            }
+        }
     }
 
     public function actionApiReparser(){
