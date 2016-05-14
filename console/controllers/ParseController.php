@@ -14,10 +14,12 @@ use common\models\Video;
 use common\models\Worker;
 use frontend\components\YoutubeAPI;
 use frontend\helpers\DateHelper;
+use frontend\helpers\ParseHelper;
 use frontend\models\YoutubeVideo;
 use yii\console\Controller;
 use yii\db\IntegrityException;
 use yii\db\Query;
+use yii\helpers\ArrayHelper;
 use yii\web\NotFoundHttpException;
 
 class ParseController extends Controller
@@ -157,7 +159,7 @@ class ParseController extends Controller
             'groupID' =>  $group
         ]);
 
-        //$worker->save(false);
+        $worker->save(false);
 
         echo "   > getting links count...\r\n";
 
@@ -181,22 +183,24 @@ class ParseController extends Controller
             $relatedLinks = [];
             
             foreach($youtubeVideo->relatedLinks as $relatedLink){
-                $relatedLinks[] = preg_replace('/(.*)\?v=/', '', $relatedLink);
+                $relatedLinks[] = ParseHelper::parseYoutubeID($relatedLink);
             }
 
-            $existedVideos = Video::find()->select(['youtubeID'])->where(['in', 'youtubeID', $relatedLinks])->asArray()->all();
+            $existedVideos = ArrayHelper::getColumn(Video::find()->select(['youtubeID'])->where(['in', 'youtubeID', $relatedLinks])->asArray()->all(), 'youtubeID');
 
-            echo implode('", "', $existedVideos).'"';
-            die();
+            $addedVideos = 0;
 
-            foreach($youtubeVideo->relatedLinks as $relatedLink){
-                $link = Link::find()->from('links, videos')->where(['or', ['`links`.`link`' => $relatedLink, '`videos`.`link`' => $relatedLink]])->count();
+            foreach(array_diff($relatedLinks, $existedVideos) as $youtubeID){
+                $link = Link::find()->where(['youtubeID' => $youtubeID])->count();
 
                 if($link <= 0){
-                    $link = new Link(['link' => $relatedLink]);
+                    $link = new Link(['link' => ParseHelper::getYoutubeLink($youtubeID)]);
 
                     try{
-                        $link->save();
+                        if($link->save()){
+                            $addedVideos++;
+                        }
+
                     }catch (IntegrityException $e){
 
                     }
@@ -204,14 +208,13 @@ class ParseController extends Controller
             }
 
             $videoLink->delete();
-            $count = count($youtubeVideo->relatedLinks);
 
-            echo "Links added: {$count}. Time spent: ".$parseTime." sec.\r\n";
+            echo "Links added: {$addedVideos}. Time spent: ".$parseTime." sec.\r\n";
         }
 
         echo "   > end working: ".date('H:i:s');
 
-        //$worker->delete();
+        $worker->delete();
     }
 
     public function actionApiReparser(){

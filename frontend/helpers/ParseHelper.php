@@ -39,6 +39,10 @@ class ParseHelper
         return $clean_text;
     }
 
+    public static function getYoutubeLink($youtubeID){
+        return "https://youtube.com/watch?v={$youtubeID}";
+    }
+
     public static function parseYoutubeID($link){
         return preg_replace('/(.*)\?v=/', '', $link);
     }
