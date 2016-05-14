@@ -139,16 +139,16 @@ class ParseController extends Controller
 
         $availableGroups = $usedGroups = [];
 
-        echo "   > start working: ".date('H:i:s');
-        echo "   > select used groups...";
+        echo "   > start working: ".date('H:i:s')."\r\n";
+        echo "   > select used groups...\r\n";
 
         foreach(Worker::find()->distinct('groupID')->where('groupID != 0')->all() as $worker){
               $usedGroups[] = $worker->groupID;
         }
 
-        echo "   > select available groups...";
-        foreach(Link::find()->andWhere(['not in', 'group', $usedGroups])->groupBy('group')->having('COUNT(`link`) > 0')->all() as $groupID){
-            $availableGroups[] = $groupID->group;
+        echo "   > select available groups...\r\n";
+        foreach(Link::find()->select('group')->distinct('group')->andWhere(['not in', 'group', $usedGroups])->groupBy('group')->having('COUNT(`link`) > 0')->asArray()->all() as $groupID){
+            $availableGroups[] = $groupID['group'];
         }
 
         $group = array_rand($availableGroups);
@@ -159,7 +159,7 @@ class ParseController extends Controller
 
         //$worker->save(false);
 
-        echo "   > getting links count...";
+        echo "   > getting links count...\r\n";
 
         $links = Link::find()->where(['group' => $group]);
 
