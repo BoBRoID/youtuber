@@ -2,6 +2,7 @@
 
 namespace common\models;
 
+use frontend\helpers\ParseHelper;
 use Yii;
 
 /**
@@ -19,6 +20,10 @@ class Link extends \yii\db\ActiveRecord
         return preg_replace('/(.*)\?v=/', '', $this->link);
     }
 
+    public function getLink(){
+        return ParseHelper::getYoutubeLink($this->youtubeID);
+    }
+    
     /**
      * @inheritdoc
      */
@@ -34,7 +39,6 @@ class Link extends \yii\db\ActiveRecord
     {
         return [
             [['added', 'group'], 'safe'],
-            [['link'], 'required'],
             [['youtubeID'], 'string', 'max' =>  11],
             [['link'], 'string', 'max' => 255],
         ];
@@ -64,7 +68,7 @@ class Link extends \yii\db\ActiveRecord
 
     public function beforeSave($insert)
     {
-        if($this->isNewRecord || empty($this->youtubeID)){
+        if(empty($this->youtubeID)){
             $this->youtubeID = $this->getYoutubeID();
         }
 

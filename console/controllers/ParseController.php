@@ -34,7 +34,7 @@ class ParseController extends Controller
             $usedGroups[] = $worker->groupID;
         }
 
-        foreach(Link::find()->andWhere(['not in', 'group', $usedGroups])->groupBy('group')->having('COUNT(`link`) > 0')->all() as $groupID){
+        foreach(Link::find()->andWhere(['not in', 'group', $usedGroups])->groupBy('group')->having('COUNT(`youtubeID`) > 0')->all() as $groupID){
             $availableGroups[] = $groupID->group;
         }
 
@@ -57,7 +57,7 @@ class ParseController extends Controller
             $youtubeVideo = new YoutubeVideo(['link' => $videoLink->link]);
             echo "   > Video {$i} from {$videosCount}... ";
 
-            if((Video::find()->where(['link' => $videoLink->link])->count() >= 1) == false){
+            if((Video::find()->where(['youtubeID' => $videoLink->youtubeID])->count() >= 1) == false){
                 $parseTime = time() + microtime();
 
                 $youtubeVideo->parse();

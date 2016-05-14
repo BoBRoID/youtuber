@@ -3,6 +3,7 @@ namespace frontend\controllers;
 
 use common\models\Video;
 use darkdrim\simplehtmldom\SimpleHTMLDom;
+use frontend\components\YoutubeAPI;
 use frontend\models\FindVideoForm;
 use frontend\models\YoutubeVideo;
 use Yii;
@@ -111,11 +112,11 @@ class SiteController extends Controller
                 $video = $video->save();
             }
 
-            $this->redirect('/search-video/'.$video->link_hash);
+            $this->redirect('/search-video/'.$video->youtubeID);
         }
 
         if($hash){
-            $video = Video::findByLinkHash($hash);
+            $video = Video::findOne(['youtubeID' => $hash]);
 
             if(!$video){
                 throw new NotFoundHttpException("Видео не найдено!");
@@ -124,6 +125,14 @@ class SiteController extends Controller
 
         if($video->isNewRecord){
             throw new NotFoundHttpException("Видео не найдено!");
+        }
+
+        if(strtotime($video->checked) - 3600 > strtotime(time())){
+            $api = new YoutubeAPI();
+
+            $video->applyApiData($api->getVideos($video->youtubeID));
+
+            $video->save(false);
         }
 
         return $this->render('video', [
@@ -144,7 +153,7 @@ class SiteController extends Controller
             $video->name = htmlspecialchars_decode(trim($video->name));
             $results[] = [
                 'name'      =>  mb_strlen($video->name) > 60 ? mb_substr($video->name, 0, 60).'...' : $video->name,
-                'link_hash' =>  $video->link_hash
+                'youtubeID' =>  $video->youtubeID
             ];
         }
 

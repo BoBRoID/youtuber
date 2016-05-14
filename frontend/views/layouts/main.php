@@ -122,7 +122,7 @@ AppAsset::register($this);
             . '</li>';
     }*/
 
-    $typeaheadTemplate = Html::a('{{name}}', '/search-video/{{link_hash}}', ['data-pjax' => 0]);
+    $typeaheadTemplate = Html::a('{{name}}', '/search-video/{{youtubeID}}', ['data-pjax' => 0]);
 
     echo Nav::widget([
         'options'   =>  ['class' => 'navbar-form navbar-left', 'role'   =>  'search'],

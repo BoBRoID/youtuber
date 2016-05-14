@@ -114,7 +114,7 @@ class YoutubeVideo extends Model
      */
     public function loadVideo($video){
         $this->setAttributes([
-            'link'          =>  $video->link,
+            'link'          =>  $video->getLink(),
             'name'          =>  $video->name,
             'views'         =>  $video->views,
             'likes'         =>  $video->likes,
@@ -125,10 +125,11 @@ class YoutubeVideo extends Model
 
     public function save($consoleMode = false){
         foreach($this->relatedLinks as $relatedLink){
-            $link = Link::findOne(['youtubeID' => ParseHelper::parseYoutubeID($relatedLink)]);
+            $relatedLink = ParseHelper::parseYoutubeID($relatedLink);
+            $link = Link::findOne(['youtubeID' => $relatedLink]);
 
             if(!$link){
-                $link = new Link(['link' => $relatedLink]);
+                $link = new Link(['youtubeID' => $relatedLink]);
 
                 try{
                     $link->save();
@@ -145,7 +146,6 @@ class YoutubeVideo extends Model
         }
 
         $videoModel->setAttributes([
-            'link'      =>  $this->link,
             'name'      =>  $this->name,
             'views'     =>  $this->views,
             'likes'     =>  $this->likes,

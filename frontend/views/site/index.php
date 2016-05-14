@@ -67,8 +67,8 @@ $this->title = 'Youtuber - статистика роликов с youtube';
                     'value'     =>  function($model){
                         $name = mb_strlen($model->name) > 55 ? mb_substr($model->name, 0, 56).'...' : $model->name;
 
-                        if(!empty($model->link_hash)){
-                            return \yii\bootstrap\Html::a($name, '/search-video/'.$model->link_hash, ['title' => $model->name, 'data-pjax' => 0]);
+                        if(!empty($model->youtubeID)){
+                            return \yii\bootstrap\Html::a($name, '/search-video/'.$model->youtubeID, ['title' => $model->name, 'data-pjax' => 0]);
                         }
                         return $name;
                     }
