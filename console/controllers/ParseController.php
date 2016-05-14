@@ -225,7 +225,7 @@ class ParseController extends Controller
         $i = 0;
 
         while($almostLinks != $i) {
-            foreach (Link::find()->where('`youtubeID` != \'\'')->orderBy('added')->limit(5000)->each() as $link) {
+            foreach (Link::find()->where('`youtubeID` != \'\'')->orderBy('added')->limit(2000)->each() as $link) {
 
                 $video = new Video([
                     'youtubeID' => $link->youtubeID,
