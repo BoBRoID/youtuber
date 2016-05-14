@@ -217,33 +217,48 @@ class ParseController extends Controller
         //$worker->delete();
     }
 
-    public function actionApiYoutubeParser(){
+    public function actionApiYoutubeParser($debug = false){
         $api = new YoutubeAPI();
 
-        foreach(Link::find()->where('`youtubeID` != \'\'')->orderBy('added')->each() as $link){
+        $almostLinks = Link::find()->count();
 
-            $video = new Video([
-                'youtubeID' =>  $link->youtubeID,
-                'link'      =>  $link->link
-            ]);
+        $i = 0;
 
-            $apiData = $api->getVideos($link->youtubeID);
+        while($almostLinks != $i){
+            foreach(Link::find()->where('`youtubeID` != \'\'')->orderBy('added')->limit(5000)->each() as $link){
 
-            try{
-                $video->applyApiData($apiData);
+                $video = new Video([
+                    'youtubeID' =>  $link->youtubeID,
+                    'link'      =>  $link->link
+                ]);
 
-                $video->save(false);
-            }catch (NotFoundHttpException $e){
-                $video->delete();
-            }catch (IntegrityException $e){
-                if($e->getCode() == 23000){
-                    $video = Video::findOne(['youtubeID' => $link->youtubeID]);
+                $apiData = $api->getVideos($link->youtubeID);
 
+                try{
                     $video->applyApiData($apiData);
 
                     $video->save(false);
+                }catch (NotFoundHttpException $e){
+                    $video->delete();
+                }catch (IntegrityException $e){
+                    if($e->getCode() == 23000){
+                        $video = Video::findOne(['youtubeID' => $link->youtubeID]);
+
+                        $video->applyApiData($apiData);
+
+                        $video->save(false);
+                    }
                 }
             }
+            $i++;
+
+            if($i == $almostLinks){
+                break;
+            }
+        }
+        
+        if($i == $almostLinks){
+            break;
         }
     }
 
