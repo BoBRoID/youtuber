@@ -99,7 +99,7 @@ $this->title = 'Youtuber - статистика роликов с youtube';
                 [
                     'attribute' =>  'checked',
                     'value'     =>  function($model){
-                        return \Yii::$app->formatter->asRelativeTime($model->checked);
+                        return \Yii::$app->formatter->asRelativeTime(strtotime($model->checked));
                     }
                 ]
             ]
