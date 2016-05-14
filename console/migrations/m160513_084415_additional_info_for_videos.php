@@ -15,7 +15,7 @@ class m160513_084415_additional_info_for_videos extends Migration
         $this->dropColumn(\common\models\Video::tableName(), 'thumbnail');
 
         $this->addColumn(\common\models\Video::tableName(), 'id', \yii\db\Schema::TYPE_BIGINT.' UNSIGNED NOT NULL AUTO_INCREMENT UNIQUE KEY');
-        $this->addColumn(\common\models\Video::tableName(), 'youtubeID', \yii\db\Schema::TYPE_STRING.'(11)');
+        $this->addColumn(\common\models\Video::tableName(), 'youtubeID', \yii\db\Schema::TYPE_STRING.'(11) PRIMARY KEY');
         $this->addColumn(\common\models\Video::tableName(), 'channelID', \yii\db\Schema::TYPE_STRING.'(24)');
         $this->addColumn(\common\models\Video::tableName(), 'categoryID', \yii\db\Schema::TYPE_INTEGER.' UNSIGNED NOT NULL DEFAULT 0');
         $this->addColumn(\common\models\Video::tableName(), 'liveBroadcast', \yii\db\Schema::TYPE_SMALLINT.'(1) UNSIGNED NOT NULL DEFAULT 0');

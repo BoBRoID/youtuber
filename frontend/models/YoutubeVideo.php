@@ -12,6 +12,7 @@ namespace frontend\models;
 use common\models\Link;
 use common\models\Video;
 use darkdrim\simplehtmldom\SimpleHTMLDom;
+use frontend\helpers\ParseHelper;
 use yii\base\ErrorException;
 use yii\base\Model;
 use yii\db\IntegrityException;
@@ -50,6 +51,10 @@ class YoutubeVideo extends Model
             [['link', 'name', 'publishDate'], 'string'],
             [['views', 'likes', 'dislikes', 'link', 'publishDate', 'name', 'thumbnail'], 'safe']
         ];
+    }
+
+    public function getYoutubeID(){
+        return ParseHelper::parseYoutubeID($this->link);
     }
 
     public function parse(){
@@ -120,7 +125,7 @@ class YoutubeVideo extends Model
 
     public function save($consoleMode = false){
         foreach($this->relatedLinks as $relatedLink){
-            $link = Link::findOne(['link' => $relatedLink]);
+            $link = Link::findOne(['youtubeID' => ParseHelper::parseYoutubeID($relatedLink)]);
 
             if(!$link){
                 $link = new Link(['link' => $relatedLink]);
@@ -133,7 +138,7 @@ class YoutubeVideo extends Model
             }
         }
 
-        $videoModel = Video::findOne(['link' => $this->link]);
+        $videoModel = Video::findOne(['youtubeID' => $this->youtubeID]);
 
         if(!$videoModel){
             $videoModel = new Video();
@@ -156,7 +161,7 @@ class YoutubeVideo extends Model
             var_dump($e);
 
             if($e->getCode() == 1062){
-                $videoModel = Video::findOne(['link' => $this->link]);
+                $videoModel = Video::findOne(['youtubeID' => ParseHelper::parseYoutubeID($this->link)]);
 
                 $videoModel->setAttributes([
                     'name'      =>  $this->name,

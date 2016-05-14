@@ -97,7 +97,7 @@ class SiteController extends Controller
             $findVideoForm = new FindVideoForm();
             $findVideoForm->load(\Yii::$app->request->post());
             
-            $video = Video::findOne(['link' => $findVideoForm->url]);
+            $video = Video::findOne(['youtubeID' => $findVideoForm->videoID]);
 
             if(!$video){
                 $video = new YoutubeVideo();
@@ -118,7 +118,7 @@ class SiteController extends Controller
             $video = Video::findByLinkHash($hash);
 
             if(!$video){
-                throw new NotFoundHttpException("Видео с хешем {$hash} не найдено!");
+                throw new NotFoundHttpException("Видео не найдено!");
             }
         }
 

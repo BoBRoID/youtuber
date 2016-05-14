@@ -39,4 +39,8 @@ class ParseHelper
         return $clean_text;
     }
 
+    public static function parseYoutubeID($link){
+        return preg_replace('/(.*)\?v=/', '', $link);
+    }
+
 }

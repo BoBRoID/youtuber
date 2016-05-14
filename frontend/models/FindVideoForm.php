@@ -9,6 +9,7 @@
 namespace frontend\models;
 
 
+use frontend\helpers\ParseHelper;
 use yii\base\Model;
 
 /**
@@ -35,6 +36,10 @@ class FindVideoForm extends Model
 
     public function getUrl(){
         return $this->_url;
+    }
+
+    public function getVideoID(){
+        return ParseHelper::parseYoutubeID($this->url);
     }
 
     public function attributeLabels()

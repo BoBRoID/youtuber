@@ -18,6 +18,7 @@ use Yii;
  * @property string $link_hash
  * @property string $added
  * @property integer $id
+ * @property string $youtubeID
  */
 class Video extends \yii\db\ActiveRecord
 {
@@ -30,10 +31,6 @@ class Video extends \yii\db\ActiveRecord
     public static function tableName()
     {
         return 'videos';
-    }
-    
-    public function getYoutubeID(){
-        return preg_replace('/(.*)\?v=/', '', $this->link);
     }
 
     /**
@@ -162,7 +159,7 @@ class Video extends \yii\db\ActiveRecord
         }
 
         if($this->isNewRecord || empty($this->youtubeID)){
-            $this->youtubeID = $this->getYoutubeID();
+            $this->youtubeID = ParseHelper::parseYoutubeID($this->link);
         }
 
         if($this->isNewRecord){
