@@ -8,6 +8,7 @@ class m160514_135237_links_index extends Migration
     {
         $this->createIndex('added', \common\models\Link::tableName(), 'added');
         $this->createIndex('added', \common\models\Video::tableName(), 'added');
+        $this->createIndex('group', \common\models\Link::tableName(), 'group');
 
         $this->execute("DELETE FROM `video` GROUP BY `youtubeID` HAVING COUNT(`youtubeID`) >= 2");
 
@@ -17,6 +18,7 @@ class m160514_135237_links_index extends Migration
     public function down()
     {
         $this->dropIndex('added', \common\models\Link::tableName());
+        $this->dropIndex('group', \common\models\Link::tableName());
         $this->dropIndex('added', \common\models\Video::tableName());
         $this->dropIndex('youtubeID', \common\models\Video::tableName());
 
