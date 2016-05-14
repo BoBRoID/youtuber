@@ -104,7 +104,7 @@ class ParseController extends Controller
         echo "   > Total links: {$videosCount}";
 
         while($i != $videosCount){
-            foreach(Link::find()->where('youtubeID = \'\' OR youtubeID is NULL')->limit(1000)->each() as $video){
+            foreach(Link::find()->where('youtubeID = \'\' OR youtubeID is NULL')->limit(5000)->each() as $video){
                 if($debug){
                     $i++;
                     echo "   > Video {$i} from {$videosCount}... ";
