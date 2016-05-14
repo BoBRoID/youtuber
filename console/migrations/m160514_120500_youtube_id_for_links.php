@@ -6,9 +6,9 @@ class m160514_120500_youtube_id_for_links extends Migration
 {
     public function up()
     {
-        $this->addColumn(\common\models\Link::tableName(), 'youtubeID', \yii\db\Schema::TYPE_STRING.'(11) NOT NULL');
+        //$this->addColumn(\common\models\Link::tableName(), 'youtubeID', \yii\db\Schema::TYPE_STRING.'(11) NOT NULL');
 
-        $this->createIndex('youtubeID', \common\models\Link::tableName(), 'youtubeID', true);
+        $this->createIndex('youtubeID', \common\models\Link::tableName(), 'youtubeID');
     }
 
     public function down()
