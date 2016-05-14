@@ -97,7 +97,7 @@ class ParseController extends Controller
         }
     }
 
-    public function actionParseLinksYoutubeKeys($debug){
+    public function actionParseLinksYoutubeKeys($debug = false){
         if($debug){
             $videosCount = Link::find()->where('youtubeID = \'\' OR youtubeID is NULL')->count();
             $i = 0;
