@@ -16,6 +16,7 @@ use frontend\components\YoutubeAPI;
 use frontend\helpers\DateHelper;
 use frontend\models\YoutubeVideo;
 use yii\console\Controller;
+use yii\db\IntegrityException;
 use yii\db\Query;
 use yii\web\NotFoundHttpException;
 
@@ -94,6 +95,96 @@ class ParseController extends Controller
 
             echo "\r\n";
         }
+    }
+
+    public function actionParseLinksYoutubeKeys(){
+        $videosCount = Link::find()->where('youtubeID = \'\' OR youtubeID is NULL')->orderBy('checked')->count();
+        $i = 0;
+
+        foreach(Link::find()->where('youtubeID = \'\' OR youtubeID is NULL')->orderBy('checked')->each() as $video){
+            $i++;
+            echo "   > Video {$i} from {$videosCount}... ";
+            $video->youtubeID = $video->getYoutubeID();
+
+            if($video->save(false)){
+                echo "Parsed!";
+            }else{
+                echo "Not parsed! Suggestion: ";
+                var_dump($video->getErrors());
+            }
+
+            echo "\r\n";
+        }
+    }
+
+    public function actionLinkParser(){
+        $i = 0;
+
+        $availableGroups = $usedGroups = [];
+
+        foreach(Worker::find()->where('groupID != 0')->groupBy('groupID')->all() as $worker){
+            $usedGroups[] = $worker->groupID;
+        }
+
+        foreach(Link::find()->andWhere(['not in', 'group', $usedGroups])->groupBy('group')->having('COUNT(`link`) > 0')->all() as $groupID){
+            $availableGroups[] = $groupID->group;
+        }
+
+        $group = array_rand($availableGroups);
+
+        $worker = new Worker([
+            'groupID' =>  $group
+        ]);
+
+        $worker->save(false);
+
+        $links = Link::find()->where(['group' => $group]);
+
+        $videosCount = $links->count();
+
+        echo "   > Total videos: {$videosCount} \r\n";
+
+        foreach($links->orderBy('added')->each() as $videoLink){
+            $i++;
+            $youtubeVideo = new YoutubeVideo(['link' => $videoLink->link]);
+            echo "   > Video {$i} from {$videosCount}... ";
+
+            $parseTime = time() + microtime();
+
+            $youtubeVideo->parse();
+
+            $parseTime = (time() + microtime()) - $parseTime;
+
+            $relatedLinks = [];
+            
+            foreach($youtubeVideo->relatedLinks as $relatedLink){
+                $relatedLinks[] = preg_replace('/(.*)\?v=/', '', $relatedLink);
+            }
+            
+            echo implode('", "', $relatedLinks).'"';
+            die();
+
+            foreach($youtubeVideo->relatedLinks as $relatedLink){
+                $link = Link::find()->from('links, videos')->where(['or', ['`links`.`link`' => $relatedLink, '`videos`.`link`' => $relatedLink]])->count();
+
+                if($link <= 0){
+                    $link = new Link(['link' => $relatedLink]);
+
+                    try{
+                        $link->save();
+                    }catch (IntegrityException $e){
+
+                    }
+                }
+            }
+
+            $videoLink->delete();
+            $count = count($youtubeVideo->relatedLinks);
+
+            echo "Links added: {$count}. Time spent: ".$parseTime." sec.\r\n";
+        }
+
+        $worker->delete();
     }
 
     public function actionApiReparser(){

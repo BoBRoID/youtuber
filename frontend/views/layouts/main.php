@@ -41,6 +41,15 @@ $analyticsJs = <<<'JS'
 ga('create', 'UA-77677693-1', 'auto');
 ga('require', 'linkid');
 ga('send', 'pageview');
+
+$("body").on("typeahead:asyncreceive", "#searchWidget", function(event, query, dataset){
+    console.log(event);
+    console.log(query);
+    console.log(dataset);
+    console.log("---------------")
+
+    //ga('send', 'pageview', '/mysite/?q=searchterm');
+});
 JS;
 
 $css = <<<'CSS'
@@ -119,6 +128,7 @@ AppAsset::register($this);
         'options'   =>  ['class' => 'navbar-form navbar-left', 'role'   =>  'search'],
         'items'     =>  [\kartik\typeahead\Typeahead::widget([
             'name'      =>  'search',
+            'id'        =>  'searchWidget',
             'options'   =>  [
                 'placeholder'   =>  'поиск по видео...'
             ],

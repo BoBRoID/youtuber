@@ -161,6 +161,10 @@ class Video extends \yii\db\ActiveRecord
             $this->link_hash = md5($this->link);
         }
 
+        if($this->isNewRecord || empty($this->youtubeID)){
+            $this->youtubeID = $this->getYoutubeID();
+        }
+
         if($this->isNewRecord){
             $this->added = date('Y-m-d');
         }
