@@ -139,13 +139,13 @@ class ParseController extends Controller
 
         $availableGroups = $usedGroups = [];
 
-        foreach(Worker::find()->where('groupID != 0')->groupBy('groupID')->all() as $worker){
+        /*foreach(Worker::find()->distinct('groupID')->where('groupID != 0')->all() as $worker){
             $usedGroups[] = $worker->groupID;
         }
 
         foreach(Link::find()->andWhere(['not in', 'group', $usedGroups])->groupBy('group')->having('COUNT(`link`) > 0')->all() as $groupID){
             $availableGroups[] = $groupID->group;
-        }
+        }*/
 
         $group = array_rand($availableGroups);
 
@@ -153,7 +153,7 @@ class ParseController extends Controller
             'groupID' =>  $group
         ]);
 
-        $worker->save(false);
+        //$worker->save(false);
 
         $links = Link::find()->where(['group' => $group]);
 
@@ -177,8 +177,10 @@ class ParseController extends Controller
             foreach($youtubeVideo->relatedLinks as $relatedLink){
                 $relatedLinks[] = preg_replace('/(.*)\?v=/', '', $relatedLink);
             }
-            
-            echo implode('", "', $relatedLinks).'"';
+
+            $existedVideos = Video::find()->select(['youtubeID'])->where(['in', 'youtubeID', $relatedLinks])->asArray()->all();
+
+            echo implode('", "', $existedVideos).'"';
             die();
 
             foreach($youtubeVideo->relatedLinks as $relatedLink){
