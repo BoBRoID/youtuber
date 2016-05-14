@@ -42,7 +42,7 @@ ga('create', 'UA-77677693-1', 'auto');
 ga('require', 'linkid');
 ga('send', 'pageview');
 
-$("body").on("typeahead:asyncreceive", "#searchWidget", function(event, query, dataset){
+$("#searchWidget").bind("typeahead:asyncreceive", function(event, query, dataset){
     console.log(event);
     console.log(query);
     console.log(dataset);
