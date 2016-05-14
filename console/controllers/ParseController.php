@@ -139,10 +139,14 @@ class ParseController extends Controller
 
         $availableGroups = $usedGroups = [];
 
+        echo "   > start working: ".date('H:i:s');
+        echo "   > select used groups...";
+
         foreach(Worker::find()->distinct('groupID')->where('groupID != 0')->all() as $worker){
               $usedGroups[] = $worker->groupID;
         }
 
+        echo "   > select available groups...";
         foreach(Link::find()->andWhere(['not in', 'group', $usedGroups])->groupBy('group')->having('COUNT(`link`) > 0')->all() as $groupID){
             $availableGroups[] = $groupID->group;
         }
@@ -154,6 +158,8 @@ class ParseController extends Controller
         ]);
 
         //$worker->save(false);
+
+        echo "   > getting links count...";
 
         $links = Link::find()->where(['group' => $group]);
 
@@ -203,7 +209,9 @@ class ParseController extends Controller
             echo "Links added: {$count}. Time spent: ".$parseTime." sec.\r\n";
         }
 
-        $worker->delete();
+        echo "   > end working: ".date('H:i:s');
+
+        //$worker->delete();
     }
 
     public function actionApiReparser(){
