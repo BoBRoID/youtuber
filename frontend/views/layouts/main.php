@@ -122,7 +122,7 @@ AppAsset::register($this);
             . '</li>';
     }*/
 
-    $typeaheadTemplate = Html::a('{{name}}', '/search-video/{{link_hash}}');
+    $typeaheadTemplate = Html::a('{{name}}', '/search-video/{{link_hash}}', ['data-pjax' => 0]);
 
     echo Nav::widget([
         'options'   =>  ['class' => 'navbar-form navbar-left', 'role'   =>  'search'],
@@ -167,9 +167,9 @@ AppAsset::register($this);
 
 <footer class="footer">
     <div class="container">
-        <p class="pull-left">&copy; My Company <?= date('Y') ?></p>
+        <p class="pull-left">&copy;Youtuber <?= date('Y') ?></p>
 
-        <p class="pull-right"><?= Yii::powered() ?></p>
+        <p class="pull-right"><a href="https://telegram.me/SomeWho">Telegram: @SomeWho</a></p>
     </div>
 </footer>
 <?php $this->endBody() ?>
