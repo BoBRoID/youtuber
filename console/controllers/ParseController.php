@@ -224,24 +224,24 @@ class ParseController extends Controller
 
         $i = 0;
 
-        while($almostLinks != $i){
-            foreach(Link::find()->where('`youtubeID` != \'\'')->orderBy('added')->limit(5000)->each() as $link){
+        while($almostLinks != $i) {
+            foreach (Link::find()->where('`youtubeID` != \'\'')->orderBy('added')->limit(5000)->each() as $link) {
 
                 $video = new Video([
-                    'youtubeID' =>  $link->youtubeID,
-                    'link'      =>  $link->link
+                    'youtubeID' => $link->youtubeID,
+                    'link' => $link->link
                 ]);
 
                 $apiData = $api->getVideos($link->youtubeID);
 
-                try{
+                try {
                     $video->applyApiData($apiData);
 
                     $video->save(false);
-                }catch (NotFoundHttpException $e){
+                } catch (NotFoundHttpException $e) {
                     $video->delete();
-                }catch (IntegrityException $e){
-                    if($e->getCode() == 23000){
+                } catch (IntegrityException $e) {
+                    if ($e->getCode() == 23000) {
                         $video = Video::findOne(['youtubeID' => $link->youtubeID]);
 
                         $video->applyApiData($apiData);
@@ -249,16 +249,17 @@ class ParseController extends Controller
                         $video->save(false);
                     }
                 }
-            }
-            $i++;
 
-            if($i == $almostLinks){
+                $i++;
+
+                if ($i == $almostLinks) {
+                    break;
+                }
+            }
+
+            if ($i == $almostLinks) {
                 break;
             }
-        }
-        
-        if($i == $almostLinks){
-            break;
         }
     }
 
