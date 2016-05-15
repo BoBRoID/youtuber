@@ -264,29 +264,21 @@ class ParseController extends Controller
     public function actionApiYoutubeParser($debug = false){
         $api = new YoutubeAPI();
 
-        $i = 0;
-
-        $availableGroups = $usedGroups = [];
-
         echo "   > start working: ".date('H:i:s')."\r\n";
 
         if($debug){
             echo "   > select used groups...\r\n";
         }
 
-        foreach(Worker::find()->select('groupID')->distinct('groupID')->where('groupID != 0')->all() as $worker){
-            $usedGroups[] = $worker->groupID;
-        }
-
+        $usedGroups = ArrayHelper::getColumn(Worker::find()->select('groupID')->distinct('groupID')->where('groupID != 0')->asArray()->all(), 'groupID');
+        
         if($debug){
             echo "   > select available groups...\r\n";
         }
 
-        foreach(Link::find()->select('group')->distinct('group')->andWhere(['not in', 'group', $usedGroups])->groupBy('group')->having('COUNT(`youtubeID`) > 0')->asArray()->all() as $groupID){
-            $availableGroups[] = $groupID['group'];
-        }
+        $availableGroups = ArrayHelper::getColumn(Link::find()->select('group')->distinct('group')->andWhere(['not in', 'group', $usedGroups])->groupBy('group')->having('COUNT(`youtubeID`) > 0')->asArray()->all(), 'group');
 
-        $group = array_rand($availableGroups);
+        $group = array_rand(array_diff($availableGroups, $usedGroups));
 
         $worker = new Worker([
             'groupID' =>  $group
@@ -307,8 +299,6 @@ class ParseController extends Controller
         }
 
         while($almostLinks != $i) {
-            $youtubeIDs = [];
-
             foreach (Link::find()->where('`youtubeID` != \'\'')->andWhere(['group' => $group])->orderBy('added')->limit(50)->each() as $link) {
                 $i++;
 
