@@ -37,7 +37,7 @@ echo \yii\grid\GridView::widget([
             'format'    =>  'raw',
             'attribute' =>  'name',
             'value'     =>  function($model){
-                if(!empty($model->link_hash)){
+                if(!empty($model->youtubeID)){
                     return \yii\bootstrap\Html::a($model->name, '/search-video/'.$model->youtubeID, ['data-pjax' => 0]);
                 }
                 return $model->name;

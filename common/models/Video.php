@@ -14,7 +14,6 @@ use Yii;
  * @property string $dislikes
  * @property string $uploaded
  * @property string $checked
- * @property string $link_hash
  * @property string $added
  * @property integer $id
  * @property string $youtubeID
@@ -127,7 +126,7 @@ class Video extends \yii\db\ActiveRecord
             [['views', 'likes', 'dislikes', 'categoryID', 'id'], 'integer'],
             [['checked'], 'safe'],
             [['added', 'uploaded'], 'date', 'format'    =>  'php:Y-m-d'],
-            [['link', 'name', 'link_hash', 'channelID'], 'string', 'max' => 255],
+            [['link', 'name', 'channelID'], 'string', 'max' => 255],
             [['youtubeID'], 'string', 'max' => 11],
             [['link', 'name'], 'trim'],
             [['liveBroadcast'], 'boolean'],

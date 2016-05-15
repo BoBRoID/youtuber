@@ -29,7 +29,7 @@ $this->title = $video->name.' - Youtuber';
     <div class="row col-xs-12" style="height: 530px;">
         <?=\yii\bootstrap\Html::a(
             FA::i('arrow-left', ['style' => 'line-height: 530px; text-align: right; width: 100%'])->size(FA::SIZE_4X),
-            empty($video->previous) ? '#' : \yii\helpers\Url::to(['/search-video/'.$video->previous->link_hash]),
+            empty($video->previous) ? '#' : \yii\helpers\Url::to(['/search-video/'.$video->previous->youtubeID]),
             [
                 'class' =>  'col-md-1 col-lg-1 hidden-xs hidden-sm btn-link',
                 'title' =>  empty($video->previous) ? 'Нет предыдущего видео' : 'Предыдущее видео',
@@ -42,7 +42,7 @@ $this->title = $video->name.' - Youtuber';
         </div>
         <?=\yii\bootstrap\Html::a(
             FA::i('arrow-right', ['style' => 'line-height: 530px; text-align: left; width: 100%'])->size(FA::SIZE_4X),
-            empty($video->next) ? '#' : \yii\helpers\Url::to(['/search-video/'.$video->next->link_hash]),
+            empty($video->next) ? '#' : \yii\helpers\Url::to(['/search-video/'.$video->next->youtubeID]),
             [
                 'class' =>  'col-md-1 col-lg-1 hidden-xs hidden-sm btn-link',
                 'style' =>  'height: 100%',
