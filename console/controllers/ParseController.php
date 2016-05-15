@@ -271,7 +271,7 @@ class ParseController extends Controller
         }
 
         $usedGroups = ArrayHelper::getColumn(Worker::find()->select('groupID')->distinct('groupID')->where('groupID != 0')->asArray()->all(), 'groupID');
-        
+
         if($debug){
             echo "   > select available groups...\r\n";
         }
@@ -419,24 +419,36 @@ class ParseController extends Controller
 
         echo "   > Total videos: {$videosCount} \r\n";
 
-        foreach(Video::find()->orderBy('checked')->each() as $video){
-            $i++;
-            echo "   > Video {$i} from {$videosCount}... ";
-            $parseTime = time() + microtime();
+        $yesterday = time() - 86400;
 
-            $youtubeVideo = new YoutubeVideo();
-            
-            $youtubeVideo->loadVideo($video);
+        while($i != $videosCount){
+            foreach(Video::find()->where("`checked` < '{$yesterday}'")->orderBy('checked')->limit(50)->each() as $video){
+                $i++;
+                echo "   > Video {$i} from {$videosCount}... ";
+                $parseTime = time() + microtime();
 
-            $youtubeVideo->parse();
+                $youtubeVideo = new YoutubeVideo();
 
-            $parseTime = (time() + microtime()) - $parseTime;
+                $youtubeVideo->loadVideo($video);
 
-            if(!$youtubeVideo->save()){
-                echo " Video {$i} don't saved in the database... \r\n";
+                $youtubeVideo->parse();
+
+                $parseTime = (time() + microtime()) - $parseTime;
+
+                if(!$youtubeVideo->save()){
+                    echo " Video {$i} don't saved in the database... \r\n";
+                }
+
+                if($i == $videosCount){
+                    break;
+                }
+
+                echo "Time spent: ".$parseTime." sec.\r\n";
             }
 
-            echo "Time spent: ".$parseTime." sec.\r\n";
+            if($i == $videosCount){
+                break;
+            }
         }
     }
 
