@@ -17,6 +17,7 @@ use frontend\helpers\DateHelper;
 use frontend\helpers\ParseHelper;
 use frontend\models\YoutubeVideo;
 use yii\console\Controller;
+use yii\db\ActiveRecord;
 use yii\db\IntegrityException;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
@@ -359,28 +360,48 @@ class ParseController extends Controller
         $api = new YoutubeAPI();
         $i = 0;
 
-        $yesterday = date('Y-m-d H:i:s', (time() - 86400));
+        $yesterday = date('Y-m-d H:i:s', (time() + 186400));
 
         $totalVideos = Video::find()->where("`youtubeID` != '' AND `checked` < '{$yesterday}'")->count();
 
         echo "   > Start working: ".date('H:i:s').", videos count: {$totalVideos}\r\n";
 
         while($totalVideos != $i){
-            foreach(Video::find()->where("`youtubeID` != '' AND `checked` < '{$yesterday}'")->orderBy('checked')->limit(10)->each(10) as $video){
-                try{
-                    $video->applyApiData($api->getVideos($video->youtubeID));
+            $videos = Video::find()->where("`youtubeID` != '' AND `checked` < '{$yesterday}'")->orderBy('checked')->limit(25)->all();
+            $videosCount = sizeof($videos);
 
-                    $video->save(false);
-                }catch (NotFoundHttpException $e){
-                    $video->delete();
+            if($videosCount == 0){
+                break;
+            }
+
+            $i += sizeof($videos);
+
+            $videoIDs = [];
+
+            foreach($videos as $video){
+                $videoIDs[] = $video->youtubeID;
+            }
+
+            try{
+                $apiData = $api->getVideos($videoIDs);
+
+                foreach($videos as $video){
+                    if(isset($apiData[$video->youtubeID])){
+                        $video->applyApiData($apiData[$video->youtubeID]);
+
+                        $video->save(false);
+                    }
                 }
+            }catch (\HTMLPurifier_ConfigSchema_Exception $e){
+                var_dump($e);
+                die();
 
-                if ($i == $totalVideos) {
-                    break;
+                foreach($videos as $video){
+                    $video->delete();
                 }
             }
 
-            if ($i == $totalVideos) {
+            if($i == $totalVideos){
                 break;
             }
         }

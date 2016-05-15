@@ -60,7 +60,13 @@ class YoutubeAPI extends Component
             return $response['items'][0];
         }
 
-        return $response['items'];
+        $items = [];
+
+        foreach ($response['items'] as $item){
+            $items[$item['id']] = $item;
+        }
+
+        return $items;
     }
 
     public function sendRequest($routeParams){

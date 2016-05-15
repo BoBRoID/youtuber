@@ -130,7 +130,11 @@ class SiteController extends Controller
         if(strtotime($video->checked) < time() - 3600){
             $api = new YoutubeAPI();
 
-            $video->applyApiData($api->getVideos($video->youtubeID));
+            try{
+                $video->applyApiData($api->getVideos($video->youtubeID));
+            }catch (NotFoundHttpException $e){
+
+            }
 
             $video->save(false);
         }
