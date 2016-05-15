@@ -25,20 +25,14 @@ use yii\web\NotFoundHttpException;
 class ParseController extends Controller
 {
 
-    public function actionIndex(){
+    public function actionIndex($debug = false){
         $i = 0;
 
-        $availableGroups = $usedGroups = [];
+        $usedGroups = ArrayHelper::getColumn(Worker::find()->distinct('groupID')->where('groupID != 0')->groupBy('groupID')->asArray()->all(), 'groupID');
 
-        foreach(Worker::find()->where('groupID != 0')->groupBy('groupID')->all() as $worker){
-            $usedGroups[] = $worker->groupID;
-        }
+        $availableGroups = ArrayHelper::getColumn(Link::find()->distinct('group')->groupBy('group')->having('COUNT(`youtubeID`) > 0')->asArray()->all(), 'group');
 
-        foreach(Link::find()->andWhere(['not in', 'group', $usedGroups])->groupBy('group')->having('COUNT(`youtubeID`) > 0')->all() as $groupID){
-            $availableGroups[] = $groupID->group;
-        }
-
-        $group = array_rand($availableGroups);
+        $group = array_rand(array_diff($availableGroups, $usedGroups));
 
         $worker = new Worker([
             'groupID' =>  $group
@@ -52,50 +46,79 @@ class ParseController extends Controller
 
         echo "   > Total videos: {$videosCount} \r\n";
 
-        foreach($links->orderBy('added')->each() as $videoLink){
-            $i++;
-            $youtubeVideo = new YoutubeVideo(['link' => $videoLink->link]);
-            echo "   > Video {$i} from {$videosCount}... ";
+        while($i != $videosCount){
+            foreach($links->orderBy('added')->limit(50)->each() as $videoLink){
+                $i++;
+                $youtubeVideo = new YoutubeVideo(['link' => $videoLink->link]);
 
-            if((Video::find()->where(['youtubeID' => $videoLink->youtubeID])->count() >= 1) == false){
-                $parseTime = time() + microtime();
-
-                $youtubeVideo->parse();
-
-                $parseTime = (time() + microtime()) - $parseTime;
-
-                if($youtubeVideo->save(true)){
-                    $videoLink->delete();
+                if($debug){
+                    echo "   > Video {$i} from {$videosCount}... ";
                 }
 
+                if((Video::find()->where(['youtubeID' => $videoLink->youtubeID])->count() >= 1) == false){
+                    $parseTime = time() + microtime();
 
-                echo "Time spent: ".$parseTime." sec.\r\n";
-            }else{
-                $videoLink->delete();
-                echo "video {$i} already in the database... \r\n";
+                    $youtubeVideo->parse();
+
+                    $parseTime = (time() + microtime()) - $parseTime;
+
+                    if($youtubeVideo->save(true)){
+                        $videoLink->delete();
+                    }
+
+                    if($debug){
+                        echo "Time spent: ".$parseTime." sec.\r\n";
+                    }
+                }else{
+                    $videoLink->delete();
+                    if($debug){
+                        echo "video {$i} already in the database... \r\n";
+                    }
+                }
+
+                if($i == $videosCount){
+                    break;
+                }
+            }
+
+            if($i == $videosCount){
+                break;
             }
         }
 
         $worker->delete();
     }
 
-    public function actionParseYoutubeKeys(){
+    public function actionParseYoutubeKeys($debug = false){
         $videosCount = Video::find()->where('youtubeID = \'\' OR youtubeID is NULL')->orderBy('checked')->count();
         $i = 0;
 
-        foreach(Video::find()->where('youtubeID = \'\' OR youtubeID is NULL')->orderBy('checked')->each() as $video){
-            $i++;
-            echo "   > Video {$i} from {$videosCount}... ";
-            $video->youtubeID = $video->getYoutubeID();
+        echo "   > Total videos: {$videosCount} \r\n";
 
-            if($video->save(false)){
-                echo "Parsed!";
-            }else{
-                echo "Not parsed! Suggestion: ";
-                //var_dump($video->getErrors());
+        while($i != $videosCount){
+            foreach(Video::find()->where('youtubeID = \'\' OR youtubeID is NULL')->orderBy('checked')->limit(1000)->each() as $video){
+                $i++;
+                $video->youtubeID = $video->getYoutubeID();
+
+                if($debug){
+                    echo "   > Video {$i} from {$videosCount}... ";
+                }
+
+                if($video->save(false) && $debug){
+                    echo "Parsed!\r\n";
+                }elseif($debug){
+                    echo "Not parsed! Suggestion: \r\n";
+                    //var_dump($video->getErrors());
+                }
+
+                if($i == $videosCount){
+                    break;
+                }
             }
 
-            echo "\r\n";
+            if($i == $videosCount){
+                break;
+            }
         }
     }
 
@@ -107,22 +130,19 @@ class ParseController extends Controller
 
         while($i != $videosCount){
             foreach(Link::find()->where('youtubeID = \'\' OR youtubeID is NULL')->limit(2000)->each() as $video){
+                $i++;
+
                 if($debug){
-                    $i++;
                     echo "   > Video {$i} from {$videosCount}... ";
                 }
 
                 $video->youtubeID = $video->getYoutubeID();
 
                 if($video->save(false) && $debug){
-                    echo "Parsed!";
+                    echo "Parsed!\r\n";
                 }elseif($debug){
-                    echo "Not parsed! Suggestion: ";
+                    echo "Not parsed! Suggestion: \r\n";
                     //var_dump($video->getErrors());
-                }
-
-                if($debug){
-                    echo "\r\n";
                 }
 
                 if($i == $videosCount){
