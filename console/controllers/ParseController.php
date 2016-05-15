@@ -359,13 +359,11 @@ class ParseController extends Controller
         $api = new YoutubeAPI();
         $i = 0;
 
-        $yesterday = time() - 86400;
+        $yesterday = date('Y-m-d H:i:s', (time() - 86400));
 
         $totalVideos = Video::find()->where("`youtubeID` != '' AND `checked` < '{$yesterday}'")->count();
 
         echo "   > Start working: ".date('H:i:s').", videos count: {$totalVideos}\r\n";
-
-        echo Video::find()->where("`youtubeID` != '' AND `checked` < '{$yesterday}'")->sql;
 
         while($totalVideos != $i){
             foreach(Video::find()->where("`youtubeID` != '' AND `checked` < '{$yesterday}'")->orderBy('checked')->limit(10)->each(10) as $video){
