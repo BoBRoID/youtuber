@@ -156,43 +156,58 @@ class ParseController extends Controller
         }
     }
 
-    public function actionLinkParser(){
+    public function actionLinkParser($debug = false){
         $i = 0;
 
         $availableGroups = $usedGroups = [];
 
         echo "   > start working: ".date('H:i:s')."\r\n";
-        echo "   > select used groups...\r\n";
+
+        if($debug){
+            echo "   > select used groups...\r\n";
+        }
 
         foreach(Worker::find()->select('groupID')->distinct('groupID')->where('groupID != 0')->all() as $worker){
               $usedGroups[] = $worker->groupID;
         }
 
-        echo "   > select available groups...\r\n";
-        foreach(Link::find()->select('group')->distinct('group')->andWhere(['not in', 'group', $usedGroups])->groupBy('group')->having('COUNT(`link`) > 0')->asArray()->all() as $groupID){
+        if($debug){
+            echo "   > select available groups...\r\n";
+        }
+
+        foreach(Link::find()->select('group')->distinct('group')->andWhere(['not in', 'group', $usedGroups])->groupBy('group')->having('COUNT(`youtubeID`) > 0')->asArray()->all() as $groupID){
             $availableGroups[] = $groupID['group'];
         }
 
         $group = array_rand($availableGroups);
 
-        //$worker = new Worker([
-        //    'groupID' =>  $group
-        //]);
+        $worker = new Worker([
+            'groupID' =>  $group
+        ]);
 
-        ///$worker->save(false);
+        $worker->save(false);
 
-        echo "   > getting links count...\r\n";
+
+        if($debug){
+            echo "   > getting links count...\r\n";
+        }
 
         $links = Link::find()->where(['group' => $group]);
 
         $videosCount = $links->count();
 
-        echo "   > Total videos: {$videosCount} \r\n";
+        if($debug){
+            echo "   > Total videos: {$videosCount} \r\n";
+        }
+        
+        $addedVideos = 0;
 
         foreach($links->orderBy('added')->each() as $videoLink){
             $i++;
             $youtubeVideo = new YoutubeVideo(['link' => $videoLink->link]);
-            echo "   > Video {$i} from {$videosCount}... ";
+            if($debug){
+                echo "   > Video {$i} from {$videosCount}... ";
+            }
 
             $parseTime = time() + microtime();
 
@@ -208,13 +223,15 @@ class ParseController extends Controller
 
             $existedVideos = ArrayHelper::getColumn(Video::find()->select(['youtubeID'])->where(['in', 'youtubeID', $relatedLinks])->asArray()->all(), 'youtubeID');
 
-            $addedVideos = 0;
+            if($debug){
+                $addedVideos = 0;
+            }
 
             foreach(array_diff($relatedLinks, $existedVideos) as $youtubeID){
                 $link = Link::find()->where(['youtubeID' => $youtubeID])->count();
 
                 if($link <= 0){
-                    $link = new Link(['link' => ParseHelper::getYoutubeLink($youtubeID)]);
+                    $link = new Link(['youtubeID' => $youtubeID]);
 
                     try{
                         if($link->save()){
@@ -228,13 +245,18 @@ class ParseController extends Controller
             }
 
             //$videoLink->delete();
-
-            echo "Links added: {$addedVideos}. Time spent: ".$parseTime." sec.\r\n";
+            if($debug){
+                echo "Links added: {$addedVideos}. Time spent: {$parseTime} sec.\r\n";
+            }
         }
 
         echo "   > end working: ".date('H:i:s');
 
-        //$worker->delete();
+        if(!$debug){
+            echo " Added {$addedVideos} video";
+        }
+
+        $worker->delete();
     }
 
     public function actionApiYoutubeParser($debug = false){
