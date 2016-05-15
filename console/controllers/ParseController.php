@@ -318,7 +318,6 @@ class ParseController extends Controller
                     'youtubeID' => $link->youtubeID,
                 ]);
 
-
                 try {
                     $apiData = $api->getVideos($link->youtubeID);
 
@@ -331,9 +330,8 @@ class ParseController extends Controller
                     }
                 } catch (NotFoundHttpException $e) {
                     if($debug){
-                        echo " Deleted!";
+                        echo " Not found...";
                     }
-                    $video->delete();
                 } catch (IntegrityException $e) {
                     if ($e->getCode() == 23000) {
                         $video = Video::findOne(['youtubeID' => $link->youtubeID]);
