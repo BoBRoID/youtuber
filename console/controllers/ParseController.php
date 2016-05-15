@@ -365,6 +365,8 @@ class ParseController extends Controller
 
         echo "   > Start working: ".date('H:i:s').", videos count: {$totalVideos}\r\n";
 
+        echo Video::find()->where("`youtubeID` != '' AND `checked` < '{$yesterday}'")->sql;
+
         while($totalVideos != $i){
             foreach(Video::find()->where("`youtubeID` != '' AND `checked` < '{$yesterday}'")->orderBy('checked')->limit(10)->each(10) as $video){
                 try{
