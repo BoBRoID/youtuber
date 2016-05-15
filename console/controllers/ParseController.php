@@ -325,9 +325,13 @@ class ParseController extends Controller
 
                     $video->save(false);
 
-                    echo " Added!";
+                    if($debug){
+                        echo " Added!";
+                    }
                 } catch (NotFoundHttpException $e) {
-                    echo " Deleted!";
+                    if($debug){
+                        echo " Deleted!";
+                    }
                     $video->delete();
                 } catch (IntegrityException $e) {
                     if ($e->getCode() == 23000) {
@@ -335,7 +339,9 @@ class ParseController extends Controller
 
                         if($video){
                             $video->applyApiData($apiData);
-                            echo " Updated!";
+                            if($debug){
+                                echo " Updated!";
+                            }
                             $video->save(false);
                         }
                     }
@@ -395,7 +401,7 @@ class ParseController extends Controller
         }
     }
 
-    public function actionGroupLinks(){
+    public function actionGroupLinks($debug = false){
         $linksCount = Link::find()->where(['group' => 0])->count();
         $linksRequired = $linksCount;
 
@@ -405,7 +411,9 @@ class ParseController extends Controller
 
         while($linksRequired > 0){
             $lastGroup++;
-            echo "   > Group {$lastGroup} from {$groupsCount}... \r\n";
+            if($debug){
+                echo "   > Group {$lastGroup} from {$groupsCount}... \r\n";
+            }
 
             $connection = \Yii::$app->db;
             $connection->createCommand("UPDATE `links` SET `group` = '{$lastGroup}' WHERE `group` = 0 ORDER BY `added` LIMIT 1000")->execute();
