@@ -355,18 +355,37 @@ class ParseController extends Controller
         }
     }
 
-    public function actionApiReparser(){
+    public function actionApiReparser($debug = false){
         $api = new YoutubeAPI();
+        $i = 0;
 
-        foreach(Video::find()->where('youtubeID != \'\' AND youtubeID is NOT NULL')->orderBy('checked')->each(10) as $video){
-            try{
-                $video->applyApiData($api->getVideos($video->youtubeID));
+        $yesterday = time() - 86400;
 
-                $video->save(false);
-            }catch (NotFoundHttpException $e){
-                $video->delete();
+        $totalVideos = Video::find()->where("`youtubeID` != '' AND `checked` < '{$yesterday}'")->count();
+
+        echo "   > Start working: ".date('H:i:s').", videos count: {$totalVideos}\r\n";
+
+        while($totalVideos != $i){
+            foreach(Video::find()->where("`youtubeID` != '' AND `checked` < '{$yesterday}'")->orderBy('checked')->limit(10)->each(10) as $video){
+                try{
+                    $video->applyApiData($api->getVideos($video->youtubeID));
+
+                    $video->save(false);
+                }catch (NotFoundHttpException $e){
+                    $video->delete();
+                }
+
+                if ($i == $totalVideos) {
+                    break;
+                }
+            }
+
+            if ($i == $totalVideos) {
+                break;
             }
         }
+
+        echo "   > End working: ".date('H:i:s')."\r\n";
     }
 
     public function actionReparseDates(){
