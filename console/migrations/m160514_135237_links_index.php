@@ -12,7 +12,7 @@ class m160514_135237_links_index extends Migration
 
         //$this->execute("DELETE FROM `video` GROUP BY `youtubeID` HAVING COUNT(`youtubeID`) >= 2");
 
-        $this->createIndex('youtubeID', \common\models\Video::tableName(), 'youtubeID', true);
+        //$this->createIndex('youtubeID', \common\models\Video::tableName(), 'youtubeID', true);
     }
 
     public function down()
