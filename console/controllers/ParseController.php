@@ -413,7 +413,7 @@ class ParseController extends Controller
         }
     }
 
-    public function actionReparse(){
+    public function actionReparse($debug = false){
         $i = 0;
         $videosCount = Video::find()->count();
 
@@ -424,7 +424,9 @@ class ParseController extends Controller
         while($i != $videosCount){
             foreach(Video::find()->where("`checked` < '{$yesterday}'")->orderBy('checked')->limit(50)->each() as $video){
                 $i++;
-                echo "   > Video {$i} from {$videosCount}... ";
+                if($debug){
+                    echo "   > Video {$i} from {$videosCount}... ";
+                }
                 $parseTime = time() + microtime();
 
                 $youtubeVideo = new YoutubeVideo();
@@ -435,21 +437,25 @@ class ParseController extends Controller
 
                 $parseTime = (time() + microtime()) - $parseTime;
 
-                if(!$youtubeVideo->save()){
+                if(!$youtubeVideo->save() && $debug){
                     echo " Video {$i} don't saved in the database... \r\n";
+                }
+
+                if($debug){
+                    echo "Time spent: ".$parseTime." sec.\r\n";
                 }
 
                 if($i == $videosCount){
                     break;
                 }
-
-                echo "Time spent: ".$parseTime." sec.\r\n";
             }
 
             if($i == $videosCount){
                 break;
             }
         }
+
+        echo "Work done: ".date('H:i:s')."\r\n";
     }
 
 }
