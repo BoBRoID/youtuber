@@ -28,9 +28,9 @@ class ParseController extends Controller
     public function actionIndex($debug = false){
         $i = 0;
 
-        $usedGroups = ArrayHelper::getColumn(Worker::find()->distinct('groupID')->where('groupID != 0')->groupBy('groupID')->asArray()->all(), 'groupID');
+        $usedGroups = ArrayHelper::getColumn(Worker::find()->select('groupID')->distinct('groupID')->where('groupID != 0')->groupBy('groupID')->asArray()->all(), 'groupID');
 
-        $availableGroups = ArrayHelper::getColumn(Link::find()->distinct('group')->groupBy('group')->having('COUNT(`youtubeID`) > 0')->asArray()->all(), 'group');
+        $availableGroups = ArrayHelper::getColumn(Link::find()->select('groupID')->distinct('group')->groupBy('group')->having('COUNT(`youtubeID`) > 0')->asArray()->all(), 'group');
 
         $group = array_rand(array_diff($availableGroups, $usedGroups));
 
@@ -164,7 +164,7 @@ class ParseController extends Controller
         echo "   > start working: ".date('H:i:s')."\r\n";
         echo "   > select used groups...\r\n";
 
-        foreach(Worker::find()->distinct('groupID')->where('groupID != 0')->all() as $worker){
+        foreach(Worker::find()->select('groupID')->distinct('groupID')->where('groupID != 0')->all() as $worker){
               $usedGroups[] = $worker->groupID;
         }
 
