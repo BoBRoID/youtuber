@@ -256,22 +256,66 @@ class ParseController extends Controller
             echo " Added {$addedVideos} video";
         }
 
+        echo "\r\n";
+
         $worker->delete();
     }
 
     public function actionApiYoutubeParser($debug = false){
         $api = new YoutubeAPI();
 
-        $almostLinks = Link::find()->count();
+        $i = 0;
+
+        $availableGroups = $usedGroups = [];
+
+        echo "   > start working: ".date('H:i:s')."\r\n";
+
+        if($debug){
+            echo "   > select used groups...\r\n";
+        }
+
+        foreach(Worker::find()->select('groupID')->distinct('groupID')->where('groupID != 0')->all() as $worker){
+            $usedGroups[] = $worker->groupID;
+        }
+
+        if($debug){
+            echo "   > select available groups...\r\n";
+        }
+
+        foreach(Link::find()->select('group')->distinct('group')->andWhere(['not in', 'group', $usedGroups])->groupBy('group')->having('COUNT(`youtubeID`) > 0')->asArray()->all() as $groupID){
+            $availableGroups[] = $groupID['group'];
+        }
+
+        $group = array_rand($availableGroups);
+
+        $worker = new Worker([
+            'groupID' =>  $group
+        ]);
+
+        if($debug){
+            echo "   > selected group: {$group}\r\n";
+        }
+
+        $worker->save(false);
+
+        $almostLinks = Link::find()->where('`youtubeID` != \'\'')->andWhere(['group' => $group])->count();
 
         $i = 0;
 
+        if($debug){
+            echo "   > total links: {$almostLinks}\r\n";
+        }
+
         while($almostLinks != $i) {
-            foreach (Link::find()->where('`youtubeID` != \'\'')->orderBy('added')->limit(2000)->each() as $link) {
+            foreach (Link::find()->where('`youtubeID` != \'\'')->andWhere(['group' => $group])->orderBy('added')->limit(500)->each() as $link) {
+                $i++;
+
+                if($debug){
+                    echo "   > Video {$i} from {$almostLinks}...";
+                }
 
                 $video = new Video([
                     'youtubeID' => $link->youtubeID,
-                    'link' => $link->link
                 ]);
 
                 $apiData = $api->getVideos($link->youtubeID);
@@ -280,7 +324,10 @@ class ParseController extends Controller
                     $video->applyApiData($apiData);
 
                     $video->save(false);
+
+                    echo " Added!";
                 } catch (NotFoundHttpException $e) {
+                    echo " Deleted!";
                     $video->delete();
                 } catch (IntegrityException $e) {
                     if ($e->getCode() == 23000) {
@@ -288,13 +335,17 @@ class ParseController extends Controller
 
                         if($video){
                             $video->applyApiData($apiData);
-
+                            echo " Updated!";
                             $video->save(false);
                         }
                     }
                 }
 
-                $i++;
+                $link->delete();
+
+                if($debug){
+                    echo "\r\n";
+                }
 
                 if ($i == $almostLinks) {
                     break;
