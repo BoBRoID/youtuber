@@ -318,9 +318,10 @@ class ParseController extends Controller
                     'youtubeID' => $link->youtubeID,
                 ]);
 
-                $apiData = $api->getVideos($link->youtubeID);
 
                 try {
+                    $apiData = $api->getVideos($link->youtubeID);
+
                     $video->applyApiData($apiData);
 
                     $video->save(false);
@@ -338,7 +339,7 @@ class ParseController extends Controller
                         $video = Video::findOne(['youtubeID' => $link->youtubeID]);
 
                         if($video){
-                            $video->applyApiData($apiData);
+                            $video->applyApiData($api->getVideos($link->youtubeID));
                             if($debug){
                                 echo " Updated!";
                             }
