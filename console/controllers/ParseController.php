@@ -307,7 +307,9 @@ class ParseController extends Controller
         }
 
         while($almostLinks != $i) {
-            foreach (Link::find()->where('`youtubeID` != \'\'')->andWhere(['group' => $group])->orderBy('added')->limit(500)->each() as $link) {
+            $youtubeIDs = [];
+
+            foreach (Link::find()->where('`youtubeID` != \'\'')->andWhere(['group' => $group])->orderBy('added')->limit(50)->each() as $link) {
                 $i++;
 
                 if($debug){
