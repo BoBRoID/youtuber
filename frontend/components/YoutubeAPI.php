@@ -82,7 +82,8 @@ class YoutubeAPI extends Component
             ->get($this->youtubeApiURL.$action.'?'.implode('&', $params));
 
         if($request->responseCode != 200){
-            var_dump($request->response);
+            echo $request->responseCode;
+            //var_dump($request->response);
         }
 
         return Json::decode($request->response);

@@ -92,7 +92,7 @@ class ParseController extends Controller
                 echo "Parsed!";
             }else{
                 echo "Not parsed! Suggestion: ";
-                var_dump($video->getErrors());
+                //var_dump($video->getErrors());
             }
 
             echo "\r\n";
@@ -118,7 +118,7 @@ class ParseController extends Controller
                     echo "Parsed!";
                 }elseif($debug){
                     echo "Not parsed! Suggestion: ";
-                    var_dump($video->getErrors());
+                    //var_dump($video->getErrors());
                 }
 
                 if($debug){

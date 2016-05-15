@@ -126,11 +126,11 @@ class Video extends \yii\db\ActiveRecord
             [['views', 'likes', 'dislikes', 'categoryID', 'id'], 'integer'],
             [['checked'], 'safe'],
             [['added', 'uploaded'], 'date', 'format'    =>  'php:Y-m-d'],
-            [['link', 'name', 'channelID'], 'string', 'max' => 255],
+            [['name', 'channelID'], 'string', 'max' => 255],
             [['youtubeID'], 'string', 'max' => 11],
-            [['link', 'name'], 'trim'],
+            [['name'], 'trim'],
             [['liveBroadcast'], 'boolean'],
-            [['link', 'name', 'views', 'likes', 'dislikes', 'uploaded', 'checked', 'added', 'channelID', 'categoryID', 'youtubeID'], 'safe']
+            [['name', 'views', 'likes', 'dislikes', 'uploaded', 'checked', 'added', 'channelID', 'categoryID', 'youtubeID'], 'safe']
         ];
     }
 

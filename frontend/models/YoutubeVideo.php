@@ -14,8 +14,10 @@ use common\models\Video;
 use darkdrim\simplehtmldom\SimpleHTMLDom;
 use frontend\helpers\ParseHelper;
 use yii\base\ErrorException;
+use yii\base\Exception;
 use yii\base\Model;
 use yii\db\IntegrityException;
+use yii\web\BadRequestHttpException;
 
 class YoutubeVideo extends Model
 {
@@ -142,7 +144,9 @@ class YoutubeVideo extends Model
         $videoModel = Video::findOne(['youtubeID' => $this->youtubeID]);
 
         if(!$videoModel){
-            $videoModel = new Video();
+            $videoModel = new Video([
+                'youtubeID' =>  $this->youtubeID
+            ]);
         }
 
         $videoModel->setAttributes([
@@ -158,9 +162,9 @@ class YoutubeVideo extends Model
                 var_dump($videoModel->getErrors());
             }
         }catch (IntegrityException $e){
-            var_dump($e);
+            echo " Video updated! ";
 
-            if($e->getCode() == 1062){
+            /*if($e->getCode() == 1062){
                 $videoModel = Video::findOne(['youtubeID' => ParseHelper::parseYoutubeID($this->link)]);
 
                 $videoModel->setAttributes([
@@ -172,7 +176,7 @@ class YoutubeVideo extends Model
                 ]);
             }elseif($consoleMode){
                 return false;
-            }
+            }*/
         }
 
         return $videoModel;

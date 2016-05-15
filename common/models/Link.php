@@ -40,7 +40,6 @@ class Link extends \yii\db\ActiveRecord
         return [
             [['added', 'group'], 'safe'],
             [['youtubeID'], 'string', 'max' =>  11],
-            [['link'], 'string', 'max' => 255],
         ];
     }
 
@@ -50,7 +49,6 @@ class Link extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'link' => 'Link',
             'added' => 'Added',
             'group' => 'Group',
             'youtubeID' =>  'youtubeID'
