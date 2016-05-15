@@ -13,7 +13,7 @@ class m160515_140810_drop_link_index extends Migration
     public function up()
     {
         //$this->dropColumn(\common\models\Link::tableName(), 'index');
-        $this->addPrimaryKey('PRIMARY', \common\models\Link::tableName(), 'youtubeID');
+        $this->addPrimaryKey('youtubeID', \common\models\Link::tableName(), 'youtubeID');
     }
 
     /**
