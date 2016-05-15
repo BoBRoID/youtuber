@@ -30,7 +30,7 @@ class ParseController extends Controller
 
         $usedGroups = ArrayHelper::getColumn(Worker::find()->select('groupID')->distinct('groupID')->where('groupID != 0')->groupBy('groupID')->asArray()->all(), 'groupID');
 
-        $availableGroups = ArrayHelper::getColumn(Link::find()->select('groupID')->distinct('group')->groupBy('group')->having('COUNT(`youtubeID`) > 0')->asArray()->all(), 'group');
+        $availableGroups = ArrayHelper::getColumn(Link::find()->select('group')->distinct('group')->groupBy('group')->having('COUNT(`youtubeID`) > 0')->asArray()->all(), 'group');
 
         $group = array_rand(array_diff($availableGroups, $usedGroups));
 
