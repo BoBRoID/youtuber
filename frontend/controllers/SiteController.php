@@ -127,7 +127,7 @@ class SiteController extends Controller
             throw new NotFoundHttpException("Видео не найдено!");
         }
 
-        if(strtotime($video->checked) - 3600 > strtotime(time())){
+        if(strtotime($video->checked) < time() - 3600){
             $api = new YoutubeAPI();
 
             $video->applyApiData($api->getVideos($video->youtubeID));
