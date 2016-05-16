@@ -46,6 +46,11 @@ class VideoSearch extends Video
             'query'     =>  $query,
             'pagination'    =>  [
                 'pageSize'  =>  50
+            ],
+            'sort'  =>  [
+                'defaultOrder'  =>  [
+                    'views' =>  SORT_DESC
+                ]
             ]
         ]);
 
