@@ -104,8 +104,9 @@ AppAsset::register($this);
         ],
     ]);
     $menuItems = [
-        ['label' => 'Главная', 'url' => ['/site/index'], ['options' => ['data-pjax' => 0]]],
-        ['label' => 'Таблица рейтинга', 'url' => ['/site/rating'], ['options' => ['data-pjax' => 0]]],
+        ['label'    =>  'Главная', 'url' => ['/site/index'], ['options' => ['data-pjax' => 0]]],
+        ['label'    =>  'Таблица рейтинга', 'url' => ['/site/rating'], ['options' => ['data-pjax' => 0]]],
+        //['label'    =>  'Поиск', 'url' => ['/site/search'], ['options' => ['data-pjax' => 0]]]
         /*['label' => 'Contact', 'url' => ['/site/contact']],*/
     ];
     /*if (Yii::$app->user->isGuest) {

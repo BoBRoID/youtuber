@@ -5,6 +5,7 @@ use common\models\Video;
 use darkdrim\simplehtmldom\SimpleHTMLDom;
 use frontend\components\YoutubeAPI;
 use frontend\models\FindVideoForm;
+use frontend\models\VideoSearch;
 use frontend\models\YoutubeVideo;
 use Yii;
 use yii\base\InvalidParamException;
@@ -145,23 +146,27 @@ class SiteController extends Controller
     }
 
     public function actionSearch(){
-        if(!\Yii::$app->request->isAjax){
-            throw new BadRequestHttpException("Этот метод доступен только через ajax!");
+        if(\Yii::$app->request->isAjax){
+            $results = [];
+
+            \Yii::$app->response->format = 'json';
+
+            foreach(Video::find()->where(['like', 'name', \Yii::$app->request->get("string")])->limit(10)->all() as $video){
+                $video->name = htmlspecialchars_decode(trim($video->name));
+                $results[] = [
+                    'name'      =>  mb_strlen($video->name) > 60 ? mb_substr($video->name, 0, 60).'...' : $video->name,
+                    'youtubeID' =>  $video->youtubeID
+                ];
+            }
+
+            return $results;
         }
 
-        $results = [];
+        $videoSearch = new VideoSearch();
 
-        \Yii::$app->response->format = 'json';
-
-        foreach(Video::find()->where(['like', 'name', \Yii::$app->request->get("string")])->limit(10)->all() as $video){
-            $video->name = htmlspecialchars_decode(trim($video->name));
-            $results[] = [
-                'name'      =>  mb_strlen($video->name) > 60 ? mb_substr($video->name, 0, 60).'...' : $video->name,
-                'youtubeID' =>  $video->youtubeID
-            ];
-        }
-
-        return $results;
+        return $this->render('search', [
+            'dataProvider'  =>  $videoSearch->search(\Yii::$app->request->get())
+        ]);
     }
 
     public function actionRating(){

@@ -18,6 +18,8 @@ $this->registerJs($js);
 
 $this->title = 'Таблица рейтинга';
 
+echo \yii\bootstrap\Html::beginTag('div', ['class' => 'row']);
+
 echo \yii\bootstrap\Html::tag('blockquote',
     \yii\bootstrap\Html::tag('h1', $this->title).
     \yii\bootstrap\Html::tag('p', 'Здесь собраны в виде таблицы все видео прошедшие через наш сервис')
@@ -72,3 +74,5 @@ echo \yii\grid\GridView::widget([
     ]
 ]);
 \yii\widgets\Pjax::end();
+
+echo \yii\bootstrap\Html::endTag('div');
