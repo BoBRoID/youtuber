@@ -2,7 +2,9 @@
 
 /** @var \common\models\Video $video */
 
+use kartik\form\ActiveForm;
 use rmrevin\yii\fontawesome\FA;
+use yii\bootstrap\Html;
 
 \rmrevin\yii\fontawesome\cdn\AssetBundle::register($this);
 
@@ -20,6 +22,8 @@ CSS;
 $this->registerCss($css);
 
 $this->title = 'Youtuber - поиск';
+
+
 ?>
 <div class="row">
     <blockquote>
@@ -28,13 +32,17 @@ $this->title = 'Youtuber - поиск';
             Поиск на нашем сайте позволяет вам найти видео по любому критерию! Ищите видео, и смотрите их подряд!
         </p>
     </blockquote>
-    <?php
+    <div class="col-xs-9">
+        <?php
         \yii\widgets\Pjax::begin([
             'id'        =>  'rating-grid',
             'timeout'   =>  2000
         ]);
         echo \yii\grid\GridView::widget([
             'dataProvider'  =>  $dataProvider,
+            'options'       =>  [
+                'style'     =>  'width: 100%'
+            ],
             'columns'       =>  [
                 [
                     'class' =>  \yii\grid\SerialColumn::className()
@@ -78,5 +86,27 @@ $this->title = 'Youtuber - поиск';
             ]
         ]);
         \yii\widgets\Pjax::end();
-    ?>
+        ?>
+    </div>
+    <div class="col-xs-3" style="margin-top: 23px">
+        <?php $form = ActiveForm::begin([
+            'type' => ActiveForm::TYPE_VERTICAL,
+            'method'    =>  'get'
+        ])?>
+        <?=$form->field($searchModel, 'name'),
+        $form->field($searchModel, 'views', [
+            'addon' =>  ['prepend' => ['content' => $form->field($searchModel, 'viewsSearchType', ['inputOptions' => ['style' => 'width: 30px;'], 'options' => ['class' => 'col-xs-2', 'style' => 'margin: -7px 0px 0px -32px;']])->dropDownList($searchModel->operands)->label(false)->error(false)]]
+        ]),
+        $form->field($searchModel, 'likes', [
+            'addon' =>  ['prepend' => ['content' => $form->field($searchModel, 'likesSearchType', ['inputOptions' => ['style' => 'width: 30px;'], 'options' => ['class' => 'col-xs-2', 'style' => 'margin: -7px 0px 0px -32px;']])->dropDownList($searchModel->operands)->label(false)->error(false)]]
+        ]),
+        $form->field($searchModel, 'dislikes', [
+            'addon' =>  ['prepend' => ['content' => $form->field($searchModel, 'dislikesSearchType', ['inputOptions' => ['style' => 'width: 30px;'], 'options' => ['class' => 'col-xs-2', 'style' => 'margin: -7px 0px 0px -32px;']])->dropDownList($searchModel->operands)->label(false)->error(false)]]
+        ]),
+        $form->field($searchModel, 'checked', [
+            'addon' =>  ['prepend' => ['content' => $form->field($searchModel, 'checkedSearchType', ['inputOptions' => ['style' => 'width: 30px;'], 'options' => ['class' => 'col-xs-2', 'style' => 'margin: -7px 0px 0px -32px;']])->dropDownList($searchModel->operands)->label(false)->error(false)]]
+        ]),
+        Html::button('Искать!', ['class' => 'btn btn-success btn-block', 'type' => 'submit'])?>
+        <?php $form->end()?>
+    </div>
 </div>

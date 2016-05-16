@@ -164,8 +164,11 @@ class SiteController extends Controller
 
         $videoSearch = new VideoSearch();
 
+        $videoSearch->load(\Yii::$app->request->get());
+
         return $this->render('search', [
-            'dataProvider'  =>  $videoSearch->search(\Yii::$app->request->get())
+            'searchModel'   =>  $videoSearch,
+            'dataProvider'  =>  $videoSearch->search(\Yii::$app->request->get("VideoSearch"))
         ]);
     }
 

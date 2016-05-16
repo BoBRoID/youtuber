@@ -140,7 +140,6 @@ class Video extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'link'          => 'Ссылка',
             'name'          => 'Название',
             'views'         => 'Просмотров',
             'likes'         => 'Лайков',

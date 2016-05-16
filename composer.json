@@ -21,7 +21,8 @@
         "darkdrim/yii2-simplehtmldom": "*",
         "rmrevin/yii2-fontawesome": "~2.14",
         "kartik-v/yii2-widget-typeahead": "*",
-        "linslin/yii2-curl": "^1.0"
+        "linslin/yii2-curl": "^1.0",
+        "kartik-v/yii2-widget-activeform": "^1.4"
     },
     "require-dev": {
         "yiisoft/yii2-codeception": "*",
