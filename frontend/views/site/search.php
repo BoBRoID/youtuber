@@ -89,7 +89,8 @@ $this->title = 'Youtuber - поиск';
     <div class="col-xs-3" style="margin-top: 23px">
         <?php $form = ActiveForm::begin([
             'type' => ActiveForm::TYPE_VERTICAL,
-            'method'    =>  'get'
+            'method'    =>  'get',
+            'action'    =>  ['/site/search']
         ])?>
         <?=$form->field($searchModel, 'name'),
         $form->field($searchModel, 'views', [
