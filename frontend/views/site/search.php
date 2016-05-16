@@ -51,7 +51,7 @@ $this->title = 'Youtuber - поиск';
                     'format'    =>  'raw',
                     'attribute' =>  'name',
                     'value'     =>  function($model){
-                        $name = mb_strlen($model->name) > 65 ? mb_substr($model->name, 0, 66).'...' : $model->name;
+                        $name = mb_strlen($model->name) > 60 ? mb_substr($model->name, 0, 60).'...' : $model->name;
 
                         if(!empty($model->youtubeID)){
                             return \yii\bootstrap\Html::a($name, '/search-video/'.$model->youtubeID, ['data-pjax' => 0, 'title' => $model->name]);
