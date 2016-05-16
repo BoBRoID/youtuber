@@ -99,7 +99,7 @@ class Video extends \yii\db\ActiveRecord
 
     public function getNext(){
         if(empty($this->_next)){
-            $this->_next = self::find()->where('views <= '.$this->views)->andWhere("`youtubeID` != '{$this->youtubeID}'")->orderBy(['views DESC', 'likes DESC'])->limit(1)->one();
+            $this->_next = self::find()->where('views <= '.$this->views)->andWhere("`youtubeID` != '{$this->youtubeID}'")->orderBy(['views' =>  SORT_DESC, 'likes' => SORT_DESC])->limit(1)->one();
         }
 
         return $this->_next;
@@ -107,7 +107,7 @@ class Video extends \yii\db\ActiveRecord
 
     public function getPrevious(){
         if(empty($this->_previous)){
-            $this->_previous = self::find()->where('views >= '.$this->views)->andWhere("`youtubeID` != '{$this->youtubeID}'")->orderBy(['views ASC', 'likes DESC'])->limit(1)->one();
+            $this->_previous = self::find()->where('views >= '.$this->views)->andWhere("`youtubeID` != '{$this->youtubeID}'")->orderBy(['views' => SORT_ASC, 'likes' => SORT_DESC])->limit(1)->one();
         }
 
         return $this->_previous;
