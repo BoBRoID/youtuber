@@ -19,7 +19,7 @@ class VideoSearch extends Video
     public $viewsSearchType = '>';
     public $likesSearchType = '>';
     public $dislikesSearchType = '>';
-    public $checkedSearchType = '>';
+    public $uploadedSearchType = '>';
 
     public function search($params){
         $query = self::find();
@@ -38,8 +38,8 @@ class VideoSearch extends Video
             $query->andWhere("`dislikes` {$this->operands[$this->dislikesSearchType]} '{$params['dislikes']}'");
         }
 
-        if(!empty($params['checked']) && isset($this->operands[$this->checkedSearchType])){
-            $query->andWhere("`checked` {$this->operands[$this->checkedSearchType]} '{$params['checked']}'");
+        if(!empty($params['uploaded']) && isset($this->operands[$this->checkedSearchType])){
+            $query->andWhere("`uploaded` {$this->operands[$this->checkedSearchType]} '{$params['uploaded']}'");
         }
 
         $dataProvider = new ActiveDataProvider([
@@ -63,7 +63,7 @@ class VideoSearch extends Video
     public function rules(){
         return [
             [['likes', 'views', 'dislikes'], 'integer'],
-            [['viewsSearchType', 'likesSearchType', 'dislikesSearchType', 'checkedSearchType'], 'safe'],
+            [['viewsSearchType', 'likesSearchType', 'dislikesSearchType', 'uploadedSearchType'], 'safe'],
             [['name', 'likes', 'views', 'dislikes', 'uploaded', 'channelID', 'categoryID', 'liveBroadcast'], 'safe']
         ];
     }

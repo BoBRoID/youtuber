@@ -75,13 +75,9 @@ $this->title = 'Youtuber - поиск';
                         return number_format($model->dislikes, 0, '.', ' ');
                     }
                 ],
-                'uploaded',
                 [
-                    'attribute' =>  'checked',
-                    'value'     =>  function($model){
-                        //return $model->checked;
-                        return \Yii::$app->formatter->asRelativeTime(strtotime($model->checked));
-                    }
+                    'label'     =>  'Загружено',
+                    'attribute' =>  'uploaded'
                 ]
             ]
         ]);
@@ -103,8 +99,8 @@ $this->title = 'Youtuber - поиск';
         $form->field($searchModel, 'dislikes', [
             'addon' =>  ['prepend' => ['content' => $form->field($searchModel, 'dislikesSearchType', ['inputOptions' => ['style' => 'width: 30px;'], 'options' => ['class' => 'col-xs-2', 'style' => 'margin: -7px 0px 0px -32px;']])->dropDownList($searchModel->operands)->label(false)->error(false)]]
         ]),
-        $form->field($searchModel, 'checked', [
-            'addon' =>  ['prepend' => ['content' => $form->field($searchModel, 'checkedSearchType', ['inputOptions' => ['style' => 'width: 30px;'], 'options' => ['class' => 'col-xs-2', 'style' => 'margin: -7px 0px 0px -32px;']])->dropDownList($searchModel->operands)->label(false)->error(false)]]
+        $form->field($searchModel, 'uploaded', [
+            'addon' =>  ['prepend' => ['content' => $form->field($searchModel, 'uploadedSearchType', ['inputOptions' => ['style' => 'width: 30px;'], 'options' => ['class' => 'col-xs-2', 'style' => 'margin: -7px 0px 0px -32px;']])->dropDownList($searchModel->operands)->label(false)->error(false)]]
         ]),
         Html::button('Искать!', ['class' => 'btn btn-success btn-block', 'type' => 'submit'])?>
         <?php $form->end()?>
