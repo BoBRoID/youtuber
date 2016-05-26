@@ -4,7 +4,7 @@
 
 
 $js = <<<'JS'
-setInterval(function(){if($("#autoUpdateCheckbox").prop('checked')){$.pjax.reload({container: '#last-added', timeout: '5000'});}}, 1500);
+setInterval(function(){if($("#autoUpdateCheckbox").prop('checked')){$.pjax.reload({container: '#last-added', timeout: '5000'});}}, 2500);
 JS;
 
 $this->registerJs($js);
