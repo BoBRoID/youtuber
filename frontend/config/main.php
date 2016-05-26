@@ -35,7 +35,7 @@ return [
             'rules' => [
                 '/'                     =>  'site/index',
                 '/<action>'             =>  'site/<action>',
-                '/search-video/<hash>'  =>  'site/search-video'
+                '/<action:(video|search-video)>/<hash>'             =>  'site/<action>',
             ],
         ],
     ],

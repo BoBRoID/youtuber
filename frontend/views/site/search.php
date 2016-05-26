@@ -21,6 +21,9 @@ CSS;
 
 $this->registerCss($css);
 
+$this->registerMetaTag(['name' => 'keywords', 'content' => 'Поиск видео youtube, Рейтинг видео youtube, Youtuber, видео с youtube, видео, статистика youtube, топ видео youtube, топ youtube, топ ютуб, видео с ютуба, статистика ютуба'], 'keywords');
+$this->registerMetaTag(['name' => 'description', 'content' => 'Найди видео на youtube: поиск по названию, лайкам, дизлайкам и прочему! Более 4 миллионов видео!'], 'description');
+
 $this->title = 'Youtuber - поиск';
 
 
@@ -54,7 +57,7 @@ $this->title = 'Youtuber - поиск';
                         $name = mb_strlen($model->name) > 60 ? mb_substr($model->name, 0, 60).'...' : $model->name;
 
                         if(!empty($model->youtubeID)){
-                            return \yii\bootstrap\Html::a($name, '/search-video/'.$model->youtubeID, ['data-pjax' => 0, 'title' => $model->name]);
+                            return \yii\bootstrap\Html::a($name, '/video/'.$model->youtubeID, ['data-pjax' => 0, 'title' => $model->name]);
                         }
                         return $name;
                     }

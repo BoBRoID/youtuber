@@ -4,11 +4,13 @@
 
 
 $js = <<<'JS'
-setInterval(function(){$.pjax.reload({container: '#last-added', timeout: '5000'});}, 1500);
+setInterval(function(){if($("#autoUpdateCheckbox").prop('checked')){$.pjax.reload({container: '#last-added', timeout: '5000'});}}, 1500);
 JS;
 
 $this->registerJs($js);
 
+$this->registerMetaTag(['name' => 'keywords', 'content' => 'Рейтинг видео youtube, Youtuber, видео с youtube, видео, статистика youtube, топ видео youtube, топ youtube, топ ютуб, видео с ютуба, статистика ютуба'], 'keywords');
+$this->registerMetaTag(['name' => 'description', 'content' => 'Статистика и рейтинг видео с youtube: поиск и сортировка по названию, лайкам, дизлайкам и прочему!'], 'description');
 
 $this->title = 'Youtuber - статистика роликов с youtube';
 ?>
@@ -16,10 +18,9 @@ $this->title = 'Youtuber - статистика роликов с youtube';
     <blockquote>
         <h3>Youtuber - найди видео!</h3>
         <p>
-            Сервис создан для создания некой статистики видео на youtube: худшие, лучшие, по колличеству лайков\дизлайков.
-            Всё просто: в поле ниже вставляем ссылку с youtube, и нажимаем искать. Затем мы перейдём на страницу видео,
-            соберём данные о нём, и добавим видео в статистику.
-            Видео индексируется и добавляется в базу данных. Если кинуть ссылку на видео с www, то даже если такое видео есть в базе данных, оно проиндексируется сразу же.
+            Посмотрите статистику видео на youtube: место по колличеству лайков, дизлайков, дате добавления и прочим параметрам.
+            Для поиска видео воспользуйтесь поиском вверху (поиск по сайту), или вставьте ссылку на видео в поле ниже.
+            Сервис отображает актуальные данные за последний час.
         </p>
     </blockquote>
     <div class="jumbotron col-xs-12" style="margin-bottom: 0;">
@@ -28,7 +29,7 @@ $this->title = 'Youtuber - статистика роликов с youtube';
 
         $form = \yii\bootstrap\ActiveForm::begin([
             'id'        =>  'searchForm',
-            'action'    =>  '/search-video'
+            'action'    =>  '/video'
         ]);
 
         echo $form->field($model, 'url', [
@@ -51,6 +52,7 @@ $this->title = 'Youtuber - статистика роликов с youtube';
         echo \yii\bootstrap\Html::tag('h4', "Уже ".\common\models\Video::find()->count()." видео на сайте!", ['style' => 'text-align: center; vertical-align: middle; line-height: 50px;']);
 
         echo \yii\bootstrap\Html::tag('h5', 'Последние обновлённые видео с более чем 500 000 просмотрами:', ['style' => 'margin-left: 15px']);
+        echo \yii\bootstrap\Html::checkbox('', true, ['style' => 'margin-left: 15px;', 'label' => 'Обновлять автоматически', 'id' => 'autoUpdateCheckbox']);
         echo \yii\grid\GridView::widget([
             'dataProvider'  =>  $lastAddedProvider,
             'summary'       =>  false,
@@ -68,7 +70,7 @@ $this->title = 'Youtuber - статистика роликов с youtube';
                         $name = mb_strlen($model->name) > 55 ? mb_substr($model->name, 0, 56).'...' : $model->name;
 
                         if(!empty($model->youtubeID)){
-                            return \yii\bootstrap\Html::a($name, '/search-video/'.$model->youtubeID, ['title' => $model->name, 'data-pjax' => 0]);
+                            return \yii\bootstrap\Html::a($name, '/video/'.$model->youtubeID, ['title' => $model->name, 'data-pjax' => 0]);
                         }
                         return $name;
                     }

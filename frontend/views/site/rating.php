@@ -14,6 +14,10 @@ $("body").on("click", '#updateBtn', function(){
 setInterval(function(){$.pjax.reload({container: '#rating-grid', timeout: '5000'});}, 1500);
 JS;
 
+$this->registerMetaTag(['name' => 'keywords', 'content' => 'Рейтинг видео youtube, Youtuber, видео с youtube, видео, статистика youtube, топ видео youtube, топ youtube, топ ютуб, видео с ютуба, статистика ютуба'], 'keywords');
+$this->registerMetaTag(['name' => 'description', 'content' => 'Рейтинг видео с youtube: сортировка по названию, лайкам, дизлайкам и прочему! Более 4 миллионов видео!'], 'description');
+
+
 $this->registerJs($js);
 
 $this->title = 'Таблица рейтинга';
@@ -40,7 +44,7 @@ echo \yii\grid\GridView::widget([
             'attribute' =>  'name',
             'value'     =>  function($model){
                 if(!empty($model->youtubeID)){
-                    return \yii\bootstrap\Html::a($model->name, '/search-video/'.$model->youtubeID, ['data-pjax' => 0]);
+                    return \yii\bootstrap\Html::a($model->name, '/video/'.$model->youtubeID, ['data-pjax' => 0]);
                 }
                 return $model->name;
             }

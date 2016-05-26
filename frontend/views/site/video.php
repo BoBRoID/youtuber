@@ -17,6 +17,13 @@ $css = <<<'CSS'
 }
 CSS;
 
+$keywords = [$video->name, 'рейтинг видео', 'колличество просмотров', 'смотреть '.$video->name];
+
+
+$this->registerMetaTag(['name' => implode(', ', $keywords)], 'keywords');
+$this->registerMetaTag(['name' => 'description', 'content' => $video->name.' - колличество просмотров, лайков, дизлайков, место в рейтинге и всё прочее на сайте youtuber.pp.ua! Похожие видео тоже здесь!'], 'description');
+
+
 $this->registerCss($css);
 
 $this->title = $video->name.' - Youtuber';
@@ -29,7 +36,7 @@ $this->title = $video->name.' - Youtuber';
     <div class="row col-xs-12" style="height: 530px;">
         <?=\yii\bootstrap\Html::a(
             FA::i('arrow-left', ['style' => 'line-height: 530px; text-align: right; width: 100%'])->size(FA::SIZE_4X),
-            empty($video->previous) ? '#' : \yii\helpers\Url::to(['/search-video/'.$video->previous->youtubeID]),
+            empty($video->previous) ? '#' : \yii\helpers\Url::to(['/video/'.$video->previous->youtubeID]),
             [
                 'class' =>  'col-md-1 col-lg-1 hidden-xs hidden-sm btn-link',
                 'title' =>  empty($video->previous) ? 'Нет предыдущего видео' : 'Предыдущее видео',
@@ -42,7 +49,7 @@ $this->title = $video->name.' - Youtuber';
         </div>
         <?=\yii\bootstrap\Html::a(
             FA::i('arrow-right', ['style' => 'line-height: 530px; text-align: left; width: 100%'])->size(FA::SIZE_4X),
-            empty($video->next) ? '#' : \yii\helpers\Url::to(['/search-video/'.$video->next->youtubeID]),
+            empty($video->next) ? '#' : \yii\helpers\Url::to(['/video/'.$video->next->youtubeID]),
             [
                 'class' =>  'col-md-1 col-lg-1 hidden-xs hidden-sm btn-link',
                 'style' =>  'height: 100%',
@@ -61,4 +68,9 @@ $this->title = $video->name.' - Youtuber';
             <span><?=FA::i('thumbs-o-down', ['title' => 'Дизлайков'])->size(FA::SIZE_2X)?>&nbsp;Не понравилось:&nbsp;<?=number_format($video->dislikes, 0, '.', ' ')?>&nbsp;</span>
         </div>
     </div>
+</div>
+<div class="jumbotron">
+    <p>
+        Смотреть видео <?=$video->name?> на сайте youtuber.pp.ua. Смотреть рейтинг видео, колличество лайков, дизлайков, дату добавления, категорию, похожие видео. Статистика видеозаписи, динамика роста популяроности - всё это в скором времени появится у нас на сервисе, нужно только немного подождать :)
+    </p>
 </div>

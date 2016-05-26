@@ -93,6 +93,10 @@ class SiteController extends Controller
     }
 
     public function actionSearchVideo($hash = null){
+        return $this->redirect("/video/{$hash}");
+    }
+
+    public function actionVideo($hash = null){
         $video = new Video();
 
         if(!empty(\Yii::$app->request->post("FindVideoForm")) && empty($hash)){

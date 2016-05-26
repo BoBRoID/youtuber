@@ -28,8 +28,6 @@ $this->registerMetaTag(['name' => 'msapplication-TileColor', 'content'  =>  '#0c
 $this->registerMetaTag(['name' => 'msapplication-TileImage', 'content'  =>  '/ms-icon-144x144.png']);
 $this->registerMetaTag(['name' => 'theme-color', 'content'  =>  '#0c84e4']);
 
-$this->registerMetaTag(['name' => 'keywords', 'content' => 'Рейтинг видео youtube, Youtuber, видео с youtube, видео, статистика youtube, топ видео youtube, топ youtube, топ ютуб, видео с ютуба, статистика ютуба']);
-
 \rmrevin\yii\fontawesome\cdn\AssetBundle::register($this);
 
 $analyticsJs = <<<'JS'
@@ -43,12 +41,7 @@ ga('require', 'linkid');
 ga('send', 'pageview');
 
 $("#searchWidget").bind("typeahead:asyncreceive", function(event, query, dataset){
-    console.log(event);
-    console.log(query);
-    console.log(dataset);
-    console.log("---------------")
-
-    //ga('send', 'pageview', '/mysite/?q=searchterm');
+    ga('send', 'pageview', '/search/?string=' + $(this).val());
 });
 JS;
 
@@ -123,7 +116,7 @@ AppAsset::register($this);
             . '</li>';
     }*/
 
-    $typeaheadTemplate = Html::a('{{name}}', '/search-video/{{youtubeID}}', ['data-pjax' => 0]);
+    $typeaheadTemplate = Html::a('{{name}}', '/video/{{youtubeID}}', ['data-pjax' => 0]);
 
     echo Nav::widget([
         'options'   =>  ['class' => 'navbar-form navbar-left', 'role'   =>  'search'],
