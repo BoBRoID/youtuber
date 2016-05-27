@@ -20,7 +20,7 @@ CSS;
 $keywords = [$video->name, 'рейтинг видео', 'колличество просмотров', 'смотреть '.$video->name];
 
 
-$this->registerMetaTag(['name' => implode(', ', $keywords)], 'keywords');
+$this->registerMetaTag(['name' => 'keywords', 'content' => implode(', ', $keywords)], 'keywords');
 $this->registerMetaTag(['name' => 'description', 'content' => $video->name.' - колличество просмотров, лайков, дизлайков, место в рейтинге и всё прочее на сайте youtuber.pp.ua! Похожие видео тоже здесь!'], 'description');
 
 
@@ -32,6 +32,9 @@ $this->title = $video->name.' - Youtuber';
 
     <div class="col-xs-12">
         <h4><?=$video->name?></h4>
+        <p style="opacity: 0">
+            Смотреть видео <?=$video->name?> на сайте youtuber.pp.ua. Смотреть рейтинг видео, колличество лайков, дизлайков, дату добавления, категорию, похожие видео. Статистика видеозаписи, динамика роста популяроности - всё это в скором времени появится у нас на сервисе, нужно только немного подождать :)
+        </p>
     </div>
     <div class="row col-xs-12" style="height: 530px;">
         <?=\yii\bootstrap\Html::a(
