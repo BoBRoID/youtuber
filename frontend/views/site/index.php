@@ -9,6 +9,7 @@ JS;
 
 $this->registerJs($js);
 
+$this->registerMetaTag(['name' => 'advmaker-verification', 'content' => 'f60b0c2eb22a0cbeb01385b7a32c2a42']);
 $this->registerMetaTag(['name' => 'keywords', 'content' => 'Рейтинг видео youtube, Youtuber, видео с youtube, видео, статистика youtube, топ видео youtube, топ youtube, топ ютуб, видео с ютуба, статистика ютуба'], 'keywords');
 $this->registerMetaTag(['name' => 'description', 'content' => 'Статистика и рейтинг видео с youtube: поиск и сортировка по названию, лайкам, дизлайкам и прочему!'], 'description');
 
