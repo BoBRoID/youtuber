@@ -44,6 +44,53 @@ $this->title = 'Youtuber - статистика роликов с youtube';
             ?>
     </div>
     <div class="" style="margin-top: 20px;">
+        <table style='width:708px;height:60px;display:block;border:0;margin:0;padding:0;'>
+<tr><td valign='top'>
+<!-- Ukrainian Banner Network 120х60 START -->
+<center><script type='text/javascript'>
+var _ubn=_ubn||{sid:Math.round((Math.random()*10000000)),data:[]};
+(function(){var n=document.getElementsByTagName('script');
+_ubn.data.push({user: 110688, format_id: 4, page: 1,
+pid: Math.round((Math.random()*10000000)),placeholder: n[n.length-1]});
+if(!_ubn.code)(function() {var script = document.createElement('script');
+script.type = 'text/javascript'; _ubn.code= script.async = script.defer = true;
+script.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'banner.kiev.ua/j/banner.js?'+_ubn.sid;
+n[0].parentNode.insertBefore(script,n[0]);})();})();
+</script><br>
+<small><a href='https://www.bannerka.ua/' target=_top>Интернет реклама УБС</a></small></center>
+<!-- Ukrainian Banner Network 120х60 END -->
+</td>
+<td valign='top'>
+<!-- Ukrainian Banner Network 468x60 START -->
+<center><script type='text/javascript'>
+var _ubn=_ubn||{sid:Math.round((Math.random()*10000000)),data:[]};
+(function(){var n=document.getElementsByTagName('script');
+_ubn.data.push({user: 110688, format_id: 1, page: 1,
+pid: Math.round((Math.random()*10000000)),placeholder: n[n.length-1]});
+if(!_ubn.code)(function() {var script = document.createElement('script');
+script.type = 'text/javascript'; _ubn.code= script.async = script.defer = true;
+script.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'banner.kiev.ua/j/banner.js?'+_ubn.sid;
+n[0].parentNode.insertBefore(script,n[0]);})();})();
+</script><br>
+<small><a href='https://www.bannerka.ua/' target=_top>Интернет реклама УБС</a></small></center>
+<!-- Ukrainian Banner Network 468x60 END -->
+</td>
+<td valign='top'>
+<!-- Ukrainian Banner Network 120х60 START -->
+<center><script type='text/javascript'>
+var _ubn=_ubn||{sid:Math.round((Math.random()*10000000)),data:[]};
+(function(){var n=document.getElementsByTagName('script');
+_ubn.data.push({user: 110688, format_id: 4, page: 1,
+pid: Math.round((Math.random()*10000000)),placeholder: n[n.length-1]});
+if(!_ubn.code)(function() {var script = document.createElement('script');
+script.type = 'text/javascript'; _ubn.code= script.async = script.defer = true;
+script.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'banner.kiev.ua/j/banner.js?'+_ubn.sid;
+n[0].parentNode.insertBefore(script,n[0]);})();})();
+</script><br>
+<small><a href='https://www.bannerka.ua/' target=_top>Интернет реклама УБС</a></small></center>
+<!-- Ukrainian Banner Network 120х60 END -->
+</td></tr>
+</table>
         <?php
         \yii\widgets\Pjax::begin([
             'id'            =>  'last-added',
