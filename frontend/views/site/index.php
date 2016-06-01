@@ -45,7 +45,7 @@ $this->title = 'Youtuber - статистика роликов с youtube';
     </div>
     <div class="" style="margin-top: 20px;">
         <div class="col-xs-12">
-            <table style='width:708px;height:60px;display:block;border:0;margin:0 auto;padding:0;'>
+            <table style='width:708px;height:60px;display:block;border:0;margin:0;padding:0;'>
                 <tr><td valign='top'>
                 <!-- Ukrainian Banner Network 120х60 START -->
                 <center><script type='text/javascript'>
@@ -91,7 +91,7 @@ $this->title = 'Youtuber - статистика роликов с youtube';
                 <small><a href='https://www.bannerka.ua/' target=_top>Интернет реклама УБС</a></small></center>
                 <!-- Ukrainian Banner Network 120х60 END -->
                 </td></tr>
-                </table>
+            </table>
         </div>
         <?php
         \yii\widgets\Pjax::begin([
