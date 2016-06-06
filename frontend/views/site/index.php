@@ -13,6 +13,14 @@ $this->registerMetaTag(['name' => 'advmaker-verification', 'content' => 'f60b0c2
 $this->registerMetaTag(['name' => 'keywords', 'content' => 'Рейтинг видео youtube, Youtuber, видео с youtube, видео, статистика youtube, топ видео youtube, топ youtube, топ ютуб, видео с ютуба, статистика ютуба'], 'keywords');
 $this->registerMetaTag(['name' => 'description', 'content' => 'Статистика и рейтинг видео с youtube: поиск и сортировка по названию, лайкам, дизлайкам и прочему!'], 'description');
 
+$css = <<<'CSS'
+.banners small{
+color: transparent;
+}
+CSS;
+
+$this->registerCss($css);
+
 $this->title = 'Youtuber - статистика роликов с youtube';
 ?>
 <div class="site-index">
@@ -43,9 +51,12 @@ $this->title = 'Youtuber - статистика роликов с youtube';
         $form->end();
             ?>
     </div>
-    <div class="" style="margin-top: 20px;">
+    <div class="banners" style="margin-top: 20px;">
         <div class="col-xs-12">
-            <table style='width:708px;height:60px;display:block;border:0;margin:0;padding:0;'>
+            <!--noindex--><div id="ambn57023"></div><!--/noindex-->
+        </div>
+        <div class="col-xs-12">
+            <table style='width:708px;height:60px;display:block;border:0;margin:0 auto;padding:0;'>
                 <tr><td valign='top'>
                 <!-- Ukrainian Banner Network 120х60 START -->
                 <center><script type='text/javascript'>
@@ -162,3 +173,4 @@ $this->title = 'Youtuber - статистика роликов с youtube';
     </div>
     <div class="clearfix"></div>
 </div>
+<!--noindex--><script type="text/javascript" src="//am15.net/bn.php?s=73455&f=6&d=57023" ></script><!--/noindex-->
