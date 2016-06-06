@@ -14,7 +14,7 @@ $this->registerMetaTag(['name' => 'keywords', 'content' => 'Рейтинг ви�
 $this->registerMetaTag(['name' => 'description', 'content' => 'Статистика и рейтинг видео с youtube: поиск и сортировка по названию, лайкам, дизлайкам и прочему!'], 'description');
 
 $css = <<<'CSS'
-.banners small{
+.banners small a{
 color: transparent !important;
 }
 CSS;
