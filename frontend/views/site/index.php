@@ -15,7 +15,7 @@ $this->registerMetaTag(['name' => 'description', 'content' => 'Статисти�
 
 $css = <<<'CSS'
 .banners small{
-color: transparent;
+color: transparent !important;
 }
 CSS;
 
