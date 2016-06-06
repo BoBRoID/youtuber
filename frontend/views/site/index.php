@@ -53,7 +53,7 @@ $this->title = 'Youtuber - статистика роликов с youtube';
     </div>
     <div class="banners" style="margin-top: 20px;">
         <div class="col-xs-12">
-            <!--noindex--><div id="ambn57023"></div><!--/noindex-->
+            <!--noindex--><div id="ambn57023" style="margin: 0 auto"></div><!--/noindex-->
         </div>
         <div class="col-xs-12">
             <table style='width:708px;height:60px;display:block;border:0;margin:0 auto;padding:0;'>
